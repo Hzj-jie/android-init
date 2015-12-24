@@ -83,7 +83,7 @@ public class InitService extends IntentService
         return createOutputFile(null);
     }
 
-    private final Writer createOutputFileWriter(String name)
+    private final PrintWriter createOutputFileWriter(String name)
         throws IOException
     {
         if (name == null || name.length() == 0)
@@ -91,8 +91,12 @@ public class InitService extends IntentService
         return new PrintWriter(createOutputFile(name));
     }
 
-    private final boolean writeLine(Writer writer, String msg)
+    private final boolean writeLine(PrintWriter writer, String msg)
     {
+        writer.println(msg);
+        writer.flush();
+        return true;
+        /*
         try
         {
             writer.write(msg);
@@ -108,9 +112,10 @@ public class InitService extends IntentService
             notify("Failed to write to " + writer);
         }
         return false;
+        */
     }
 
-    private final void notify(Writer writer, String title, String msg)
+    private final void notify(PrintWriter writer, String title, String msg)
     {
         Notification n = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -140,14 +145,14 @@ public class InitService extends IntentService
         notify(null, title, msg);
     }
 
-    private final void notify(Writer writer, String msg)
+    private final void notify(PrintWriter writer, String msg)
     {
         notify(writer, "Init service failed", msg);
     }
 
     private final void notify(String msg)
     {
-        notify((Writer) null, msg);
+        notify((PrintWriter) null, msg);
     }
 
     private final List<String> buildCmd()
@@ -167,7 +172,7 @@ public class InitService extends IntentService
     private final void exec()
     {
         File iodir = outputDirectory();
-        Writer writer = null;
+        PrintWriter writer = null;
         try
         {
             writer = createOutputFileWriter("output.log");
@@ -223,6 +228,8 @@ public class InitService extends IntentService
         }
         finally
         {
+            writer.close();
+            /*
             try
             {
                 writer.close();
@@ -232,6 +239,7 @@ public class InitService extends IntentService
                 notify("Failed to close writer of " + writer);
                 return;
             }
+            */
         }
     }
 
