@@ -9,7 +9,8 @@ import android.os.Environment;
 import android.os.SystemClock;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.lang.IllegalArgumentException;
@@ -82,15 +83,15 @@ public class InitService extends IntentService
         return createOutputFile(null);
     }
 
-    private final FileWriter createOutputFileWriter(String name)
+    private final Writer createOutputFileWriter(String name)
         throws IOException
     {
         if (name == null || name.length() == 0)
             throw new IllegalArgumentException("name");
-        return new FileWriter(createOutputFile(name));
+        return new PrintWriter(createOutputFile(name));
     }
 
-    private final boolean writeLine(FileWriter writer, String msg)
+    private final boolean writeLine(Writer writer, String msg)
     {
         try
         {
@@ -109,7 +110,7 @@ public class InitService extends IntentService
         return false;
     }
 
-    private final void notify(FileWriter writer, String title, String msg)
+    private final void notify(Writer writer, String title, String msg)
     {
         Notification n = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -139,14 +140,14 @@ public class InitService extends IntentService
         notify(null, title, msg);
     }
 
-    private final void notify(FileWriter writer, String msg)
+    private final void notify(Writer writer, String msg)
     {
         notify(writer, "Init service failed", msg);
     }
 
     private final void notify(String msg)
     {
-        notify((FileWriter) null, msg);
+        notify((Writer) null, msg);
     }
 
     private final List<String> buildCmd()
@@ -166,7 +167,7 @@ public class InitService extends IntentService
     private final void exec()
     {
         File iodir = outputDirectory();
-        FileWriter writer = null;
+        Writer writer = null;
         try
         {
             writer = createOutputFileWriter("output.log");
