@@ -207,7 +207,7 @@ public class InitService extends IntentService
             BufferedReader in = null;
             try
             {
-                in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(p.getInputStream()), 1);
                 String line = null;
                 while ((line = in.readLine()) != null)
                 {
