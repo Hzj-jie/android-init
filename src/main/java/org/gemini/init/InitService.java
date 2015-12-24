@@ -204,10 +204,9 @@ public class InitService extends IntentService
                 notify(writer, "Failed to start process.");
                 return;
             }
-            BufferedReader in = null;
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()), 1);
             try
             {
-                in = new BufferedReader(new InputStreamReader(p.getInputStream()), 1);
                 String line = null;
                 while ((line = in.readLine()) != null)
                 {
