@@ -1,11 +1,13 @@
 package org.gemini.init;
 
-import android.app.IntentService;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.SystemClock;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +22,7 @@ import java.lang.ProcessBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InitService extends IntentService
+public class InitService extends Service
 {
     private static final String initFolder = "init";
 
@@ -57,11 +59,6 @@ public class InitService extends IntentService
             return true;
         }
         return false;
-    }
-
-    public InitService()
-    {
-        super("InitService");
     }
 
     private final File createOutputFile(String name)
@@ -115,6 +112,20 @@ public class InitService extends IntentService
         */
     }
 
+    @SuppressWarnings("deprecation")
+    @TargetApi(15)
+    private static final Notification getNotification(Notification.Builder builder)
+    {
+        return builder.getNotification();
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(10)
+    private static final Notification buildNotification(int icon, CharSequence msg, long when)
+    {
+        return new Notification(icon, msg, when);
+    }
+
     private final void notify(PrintWriter writer, String title, String msg)
     {
         Notification n = null;
@@ -130,10 +141,10 @@ public class InitService extends IntentService
                 n = builder.build();
             }
             else
-                n = builder.getNotification();
+                n = getNotification(builder);
         }
         else
-            n = new Notification(R.drawable.blank, msg, 0);
+            n = buildNotification(R.drawable.blank, msg, 0);
         NotificationManager m = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         m.notify(0, n);
         if (writer != null)
@@ -243,10 +254,13 @@ public class InitService extends IntentService
     }
 
     @Override
-    protected void onHandleIntent(Intent intent)
+    public void onCreate()
     {
         exec();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
+
+    @Override
+    public IBinder onBind(Intent intent) { return null; }
 }
