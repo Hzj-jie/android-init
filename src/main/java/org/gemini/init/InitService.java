@@ -66,7 +66,7 @@ public class InitService extends Service
 
     private static final String currentTime()
     {
-        return DateFormat.getDateInstance().format(new Date());
+        return DateFormat.getDateTimeInstance().format(new Date());
     }
 
     private final File createOutputFile(String name)
