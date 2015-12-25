@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.io.InputStreamReader;
@@ -19,7 +20,9 @@ import java.lang.IllegalArgumentException;
 import java.lang.InterruptedException;
 import java.lang.Process;
 import java.lang.ProcessBuilder;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InitService extends Service
@@ -61,6 +64,11 @@ public class InitService extends Service
         return false;
     }
 
+    private static final String currentTime()
+    {
+        return DateFormat.getDateInstance().format(new Date());
+    }
+
     private final File createOutputFile(String name)
     {
         File iodir = null;
@@ -85,7 +93,7 @@ public class InitService extends Service
     {
         if (name == null || name.length() == 0)
             throw new IllegalArgumentException("name");
-        return new PrintWriter(createOutputFile(name));
+        return new PrintWriter(new FileWriter(createOutputFile(name), true));
     }
 
     private final boolean writeLine(PrintWriter writer, String msg)
@@ -124,6 +132,18 @@ public class InitService extends Service
     private static final Notification buildNotification(int icon, CharSequence msg, long when)
     {
         return new Notification(icon, msg, when);
+    }
+
+    private static final int waitFor(Process p)
+    {
+        try
+        {
+            return p.waitFor();
+        }
+        catch (InterruptedException ex)
+        {
+            return Short.MIN_VALUE;
+        }
     }
 
     private final void notify(PrintWriter writer, String title, String msg)
@@ -193,6 +213,8 @@ public class InitService extends Service
             notify("Failed to create writer of " + iodir);
             return;
         }
+        if (!writeLine(writer, ">>>> Instance starts at " + currentTime()))
+            return;
         try
         {
             List<String> prog = buildCmd();
@@ -230,11 +252,15 @@ public class InitService extends Service
                 notify(writer, "Failed to read process output.");
             }
             notify(writer, "Init service finished", "No other errors detected so far.");
-            try
             {
-                p.waitFor();
+                int r = waitFor(p);
+                if (!writeLine(writer,
+                               ">>>> Instance finishes at " +
+                               currentTime() +
+                               ", with exit code " +
+                               r))
+                    return;
             }
-            catch (InterruptedException ex) {}
         }
         finally
         {
@@ -254,11 +280,19 @@ public class InitService extends Service
     }
 
     @Override
-    public void onCreate()
+    public int onStartCommand(Intent intent, int flags, int startId)
     {
-        exec();
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                exec();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+            }
+        }.start();
+        return START_STICKY;
     }
 
     @Override
