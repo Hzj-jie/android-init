@@ -11,7 +11,7 @@ sleep 30
 am start --user 0 com.skype.polaris/com.skype.raider.Main
 sleep 30
 
-sh /sdcard/init/move_wechat_pics.sh &
+sh /sdcard/init/move.sh &
 sh /sdcard/init/logger.sh
 
 echo Finish init.sh
