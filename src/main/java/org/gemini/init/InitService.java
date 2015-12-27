@@ -223,6 +223,8 @@ public class InitService extends Service
                 notify(writer, "No initial scripts found.");
                 return;
             }
+            if (!writeLine(writer, ">>>> Start command " + prog))
+                return;
             Process p = null;
             try
             {
@@ -280,7 +282,7 @@ public class InitService extends Service
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
+    public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
         new Thread()
         {
@@ -288,6 +290,7 @@ public class InitService extends Service
             public void run()
             {
                 exec();
+                stopSelf(startId);
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
             }
