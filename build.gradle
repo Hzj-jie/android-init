@@ -7,6 +7,12 @@ buildscript {
     }
 }
 
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+    }
+}
+
 apply plugin: 'com.android.application'
 
 android {
