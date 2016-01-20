@@ -21,12 +21,14 @@ import java.lang.InterruptedException;
 import java.lang.Process;
 import java.lang.ProcessBuilder;
 import java.text.DateFormat;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class InitService extends Service
 {
+    private static final AtomicInteger running = new AtomicInteger();
     private static final String initFolder = "init";
 
     private static final File internalInitDirectory()
@@ -284,18 +286,26 @@ public class InitService extends Service
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId)
     {
-        new Thread()
+        if (running.compareAndSet(0, 1))
         {
-            @Override
-            public void run()
+            new Thread()
             {
-                exec();
-                stopSelf(startId);
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(0);
-            }
-        }.start();
-        return START_STICKY;
+                @Override
+                public void run()
+                {
+                    exec();
+                    stopSelf(startId);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
+                }
+            }.start();
+            return START_STICKY;
+        }
+        else
+        {
+            stopSelf(startId);
+            return START_NOT_STICKY;
+        }
     }
 
     @Override
