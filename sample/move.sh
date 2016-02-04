@@ -13,6 +13,8 @@ do
 
     mv /storage/sdcard1/HDWallPaper/bigImage/* '/storage/sdcard1/background images/'
     mv /storage/sdcard1/Pictures/OGQ/* '/storage/sdcard1/background images/'
+
+    mv /storage/emulated/0/Download/* /storage/sdcard1/Download/
     
     sleep 1800
 done;
