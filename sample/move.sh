@@ -15,6 +15,7 @@ do
     mv /storage/sdcard1/Pictures/OGQ/* '/storage/sdcard1/background images/'
 
     mv /storage/emulated/0/Download/* /storage/sdcard1/Download/
+    mv /storage/emulated/0/Pictures/Screenshots/* /storage/sdcard1/Pictures/Screenshots/
     
     sleep 1800
 done;
