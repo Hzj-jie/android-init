@@ -16,6 +16,7 @@ do
 
     mv /storage/emulated/0/Download/* /storage/sdcard1/Download/
     mv /storage/emulated/0/Pictures/Screenshots/* /storage/sdcard1/Pictures/Screenshots/
-    
+    cp /storage/emulated/0/MagazineUnlock/* /storage/sdcard1/Pictures/MagazineUnlock/
+
     sleep 1800
 done;
