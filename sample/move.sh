@@ -8,9 +8,11 @@ mkdir -p '/storage/sdcard1/Pictures/background images/'
 
 while (true);
 do
+    mv /storage/emulated/0/tencent/MicroMsg/WeXin/*.mp4 /storage/sdcard1/DCIM/
     mv /storage/emulated/0/tencent/MicroMsg/WeiXin/* /storage/sdcard1/Pictures/WeChat/
     mv /storage/sdcard1/Pictures/WeChat/do.not.delete /storage/emulated/0/tencent/MicroMsg/WeiXin/
 
+    mv /storage/emulated/0/tencent/MicroMsg/WeChat/*.mp4 /storage/sdcard1/DCIM/
     mv /storage/emulated/0/tencent/MicroMsg/WeChat/* /storage/sdcard1/Pictures/WeChat/
     mv /storage/sdcard1/Pictures/WeChat/do.not.delete /storage/emulated/0/tencent/MicroMsg/WeChat/
 
