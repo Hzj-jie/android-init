@@ -3,6 +3,7 @@
 mkdir -p /storage/sdcard1/Pictures/WeChat
 mkdir -p '/storage/sdcard1/Pictures/background images/'
 mkdir -p /storage/sdcard1/Pictures/MagazineUnlock/
+mkdir -p /storage/sdcard1/Download
 
 while (true)
 do
@@ -28,6 +29,8 @@ do
     mv /storage/emulated/0/Download/* /storage/sdcard1/Download/
     mv /storage/emulated/0/Pictures/Screenshots/* /storage/sdcard1/Pictures/Screenshots/
     sh /storage/sdcard1/init/copy-new.sh /storage/emulated/0/MagazineUnlock/ /storage/sdcard1/Pictures/MagazineUnlock/
+
+    mv /storage/sdcard1/Android/data/com.dv.adm/files/* /storage/sdcard1/Download/
 
     sleep 1800
 done
