@@ -1,36 +1,39 @@
 #!/system/bin/sh
 
-mkdir -p /storage/sdcard1/Pictures/WeChat
-mkdir -p '/storage/sdcard1/Pictures/background images/'
-mkdir -p /storage/sdcard1/Pictures/MagazineUnlock/
-mkdir -p /storage/sdcard1/Download
+SDCARD=/mnt/ext_sdcard/
+INTERNAL=/mnt/user/0/primary/
+
+mkdir -p "$SDCARD/Pictures/WeChat"
+mkdir -p "$SDCARD/Pictures/background images"
+mkdir -p "$SDCARD/Pictures/MagazineUnlock"
+mkdir -p "$SDCARD/Download"
 
 while (true)
 do
-    if [ -d /storage/emulated/0/tencent/MicroMsg/WeXin ]
+    if [ -d "$INTERNAL/tencent/MicroMsg/WeXin" ]
     then
-        mv /storage/emulated/0/tencent/MicroMsg/WeXin/*.mp4 /storage/sdcard1/DCIM/
-        mv /storage/emulated/0/tencent/MicroMsg/WeiXin/* /storage/sdcard1/Pictures/WeChat/
-        touch /storage/emulated/0/tencent/MicroMsg/WeiXin/do.not.delete
+        mv "$INTERNAL/tencent/MicroMsg/WeXin/*.mp4" "$SDCARD/DCIM/"
+        mv "$INTERNAL/tencent/MicroMsg/WeiXin/*" "$SDCARD/Pictures/WeChat/"
+        touch "$INTERNAL/tencent/MicroMsg/WeiXin/do.not.delete"
     fi
 
-    if [ -d /storage/emulated/0/tencent/MicroMsg/WeChat ]
+    if [ -d "$INTERNAL/tencent/MicroMsg/WeChat" ]
     then
-        mv /storage/emulated/0/tencent/MicroMsg/WeChat/*.mp4 /storage/sdcard1/DCIM/
-        mv /storage/emulated/0/tencent/MicroMsg/WeChat/* /storage/sdcard1/Pictures/WeChat/
-        touch /storage/emulated/0/tencent/MicroMsg/WeChat/do.not.delete
+        mv "$INTERNAL/tencent/MicroMsg/WeChat/*.mp4" "$SDCARD/DCIM/"
+        mv "$INTERNAL/tencent/MicroMsg/WeChat/*" "$SDCARD/Pictures/WeChat/"
+        touch "$INTERNAL/tencent/MicroMsg/WeChat/do.not.delete"
     fi
 
-    rm /storage/sdcard1/Pictures/WeChat/do.not.delete
+    rm "$SDCARD/Pictures/WeChat/do.not.delete"
 
-    mv /storage/sdcard1/HDWallPaper/bigImage/* '/storage/sdcard1/Pictures/background images/'
-    mv /storage/sdcard1/Pictures/OGQ/* '/storage/sdcard1/Pictures/background images/'
+    mv "$SDCARD/HDWallPaper/bigImage/*" "$SDCARD/Pictures/background images/"
+    mv "$SDCARD/Pictures/OGQ/*" "$SDCARD/Pictures/background images/"
 
-    mv /storage/emulated/0/Download/* /storage/sdcard1/Download/
-    mv /storage/emulated/0/Pictures/Screenshots/* /storage/sdcard1/Pictures/Screenshots/
-    sh /storage/sdcard1/init/copy-new.sh /storage/emulated/0/MagazineUnlock/ /storage/sdcard1/Pictures/MagazineUnlock/
+    mv "$INTERNAL/Download/*" "$SDCARD/Download/"
+    mv "$INTERNAL/Pictures/Screenshots/*" "$SDCARD/Pictures/Screenshots/"
+    sh "$SDCARD/init/copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/"
 
-    mv /storage/sdcard1/Android/data/com.dv.adm/files/* /storage/sdcard1/Download/
+    mv "$SDCARD/Android/data/com.dv.adm/files/*" "$SDCARD/Download/"
 
     sleep 1800
 done
