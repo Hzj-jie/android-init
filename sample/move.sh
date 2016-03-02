@@ -1,8 +1,5 @@
 #!/system/bin/sh
 
-SDCARD=/mnt/ext_sdcard/
-INTERNAL=/mnt/user/0/primary/
-
 mkdir -p "$SDCARD/Pictures/WeChat"
 mkdir -p "$SDCARD/Pictures/background images"
 mkdir -p "$SDCARD/Pictures/MagazineUnlock"
