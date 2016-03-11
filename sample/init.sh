@@ -5,7 +5,7 @@ echo Start init.sh
 export SDCARD=/mnt/ext_sdcard/
 export INTERNAL=/mnt/user/0/primary/
 
-sleep 120
+# sleep 120
 
 sh "$SDCARD/init/start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
 # sh "$SDCARD/init/start-activity.sh" "com.microsoft.skydrive" ".MainActivity"

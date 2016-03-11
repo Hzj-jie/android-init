@@ -7,30 +7,32 @@ mkdir -p "$SDCARD/Download"
 
 while (true)
 do
-    if [ -d "$INTERNAL/tencent/MicroMsg/WeXin" ]
+    if [ -d "$INTERNAL/tencent/MicroMsg/WeiXin" ]
     then
-        mv "$INTERNAL/tencent/MicroMsg/WeXin/*.mp4" "$SDCARD/DCIM/"
-        mv "$INTERNAL/tencent/MicroMsg/WeiXin/*" "$SDCARD/Pictures/WeChat/"
-        touch "$INTERNAL/tencent/MicroMsg/WeiXin/do.not.delete"
+        FROM_PATH="$INTERNAL/tencent/MicroMsg/WeiXin"
     fi
 
     if [ -d "$INTERNAL/tencent/MicroMsg/WeChat" ]
     then
-        mv "$INTERNAL/tencent/MicroMsg/WeChat/*.mp4" "$SDCARD/DCIM/"
-        mv "$INTERNAL/tencent/MicroMsg/WeChat/*" "$SDCARD/Pictures/WeChat/"
-        touch "$INTERNAL/tencent/MicroMsg/WeChat/do.not.delete"
+        FROM_PATH="$INTERNAL/tencent/MicroMsg/WeChat"
     fi
 
-    rm "$SDCARD/Pictures/WeChat/do.not.delete"
+    if [ ! -z "$FROM_PATH" ]
+    then
+        mv $FROM_PATH/*.mp4 $SDCARD/DCIM/
+        mv $FROM_PATH/* $SDCARD/Pictures/WeChat/
+        touch "$FROM_PATH/do.not.delete"
+        rm "$SDCARD/Pictures/WeChat/do.not.delete"
+    fi
 
-    mv "$SDCARD/HDWallPaper/bigImage/*" "$SDCARD/Pictures/background images/"
-    mv "$SDCARD/Pictures/OGQ/*" "$SDCARD/Pictures/background images/"
+    mv $SDCARD/HDWallPaper/bigImage/* $SDCARD/Pictures/background\ images/
+    mv $SDCARD/Pictures/OGQ/* $SDCARD/Pictures/background\ images/
 
-    mv "$INTERNAL/Download/*" "$SDCARD/Download/"
-    mv "$INTERNAL/Pictures/Screenshots/*" "$SDCARD/Pictures/Screenshots/"
-    sh "$SDCARD/init/copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/"
+    mv $INTERNAL/Download/* $SDCARD/Download/
+    mv $INTERNAL/Pictures/Screenshots/* $SDCARD/Pictures/Screenshots/
+    sh $SDCARD/init/copy-new.sh $INTERNAL/MagazineUnlock/ $SDCARD/Pictures/MagazineUnlock/
 
-    mv "$SDCARD/Android/data/com.dv.adm/files/*" "$SDCARD/Download/"
+    mv $SDCARD/Android/data/com.dv.adm/files/* $SDCARD/Download/
 
     sleep 1800
 done
