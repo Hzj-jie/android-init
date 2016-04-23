@@ -2,8 +2,8 @@
 
 echo Start init.sh
 
-export SDCARD=/mnt/ext_sdcard/
-export INTERNAL=/mnt/user/0/primary/
+export SDCARD=/storage/sdcard1/
+export INTERNAL=/storage/sdcard0/
 
 # sleep 120
 

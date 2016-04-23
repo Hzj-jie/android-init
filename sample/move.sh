@@ -7,23 +7,23 @@ mkdir -p "$SDCARD/Download"
 
 while (true)
 do
-    if [ -d "$INTERNAL/tencent/MicroMsg/WeiXin" ]
-    then
-        FROM_PATH="$INTERNAL/tencent/MicroMsg/WeiXin"
-    fi
-
-    if [ -d "$INTERNAL/tencent/MicroMsg/WeChat" ]
-    then
-        FROM_PATH="$INTERNAL/tencent/MicroMsg/WeChat"
-    fi
-
-    if [ ! -z "$FROM_PATH" ]
-    then
-        mv $FROM_PATH/*.mp4 $SDCARD/DCIM/
-        mv $FROM_PATH/* $SDCARD/Pictures/WeChat/
-        touch "$FROM_PATH/do.not.delete"
-        rm "$SDCARD/Pictures/WeChat/do.not.delete"
-    fi
+    for i in "$INTERNAL" "$SDCARD"
+    do
+        for j in "WeiXin" "WeChat"
+        do
+            if [ -d "$i/tencent/MicroMsg/$j" ]
+            then
+                FROM_PATH="$i/tencent/MicroMsg/$j"
+            fi
+            if [ ! -z "$FROM_PATH" ]
+            then
+                mv $FROM_PATH/*.mp4 $SDCARD/DCIM/
+                mv $FROM_PATH/* $SDCARD/Pictures/WeChat/
+                touch "$FROM_PATH/do.not.delete"
+                rm "$SDCARD/Pictures/WeChat/do.not.delete"
+            fi
+        done
+    done
 
     mv $SDCARD/HDWallPaper/bigImage/* $SDCARD/Pictures/background\ images/
     mv $SDCARD/Pictures/OGQ/* $SDCARD/Pictures/background\ images/
