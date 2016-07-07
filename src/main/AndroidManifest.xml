@@ -5,6 +5,9 @@
     android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="4" />
+    <uses-permission xmlns:tools="http://schemas.android.com/tools"
+                     android:name="android.permission.DUMP"
+                     tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application android:icon="@drawable/blank">
