@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-echo Start init.sh
+echo Start init.sh @ `date`
 
 export SDCARD=/storage/sdcard1/
 export INTERNAL=/storage/sdcard0/
@@ -14,7 +14,9 @@ sh "$SDCARD/init/start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
 # sh "$SDCARD/init/move.sh" &
 # sh "$SDCARD/init/logger.sh"
 
+sh "$SDCARD/init/power-watch.sh" &
+
 # Do not need to debug anymore
 sh "$SDCARD/init/move.sh"
 
-echo Finish init.sh
+echo Finish init.sh @ `date`
