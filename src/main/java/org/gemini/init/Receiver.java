@@ -32,10 +32,10 @@ public class Receiver extends BroadcastReceiver
         context.unregisterReceiver(instance);
     }
 
-    synchronized private void writeLine(String msg)
+    synchronized private void writeLine(Context context, String msg)
     {
         if (logger == null) logger = new Logger(context, "receiver.log");
-        logger.writeLine(">>>> Received action " + intent.getAction());
+        logger.writeLine(msg);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Receiver extends BroadcastReceiver
             return;
         }
 
-        writeLine(">>>> Received action " + intent.getAction());
+        writeLine(context, ">>>> Received action " + intent.getAction());
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
             Intent.ACTION_SCREEN_ON.equals(intent.getAction()) ||
             Intent.ACTION_SCREEN_OFF.equals(intent.getAction()))
