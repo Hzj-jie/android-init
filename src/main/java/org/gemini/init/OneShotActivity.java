@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.os.Process;
 import android.net.Uri;
 
-public class ActivateInitActivity extends Activity
+public class OneShotActivity extends Activity
 {
     @Override
     protected void onCreate(Bundle bundle)
     {
         super.onCreate(bundle);
-        startService(new Intent(Intent.ACTION_BOOT_COMPLETED,
+        startService(new Intent(ExecService.ONE_SHOT,
                                 Uri.EMPTY,
                                 this,
                                 ExecService.class));

@@ -10,21 +10,22 @@
                      tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <application android:icon="@drawable/blank">
-        <service android:name=".InitService" android:label="Init Service">
-            <intent-filter>
-                <action android:name=".InitService" />
-            </intent-filter>
-        </service>
-
-        <receiver android:name=".BootReceiver"
-            android:label="BootReceiver"
+        <receiver android:name=".Receiver"
+            android:label="Receiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />                
             </intent-filter>
         </receiver>
+
+        <service android:name=".ExecService" android:label="Exec Service" />
 
         <activity android:name=".ActivateInitActivity"
             android:label="Activate Init"
@@ -32,6 +33,17 @@
             android:exported="true">
             <intent-filter>
                 <action android:name=".ActivateInitActivity" />
+                <action android:name="android.intent.action.MAIN" /> 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".OneShotActivity"
+            android:label="OneShot"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name=".OneShotActivity" />
                 <action android:name="android.intent.action.MAIN" /> 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
