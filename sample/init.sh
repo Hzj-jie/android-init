@@ -17,7 +17,7 @@ sh "$SDCARD/init/start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
 cp /system/etc/hosts $SDCARD/backup/
 cp /system/build.prop $SDCARD/backup/emui3.1/build.prop.changed
 
-sh "$SDCARD/init/power-watch.sh" &
+# sh "$SDCARD/init/power-watch.sh" &
 
 # Do not need to debug anymore
 sh "$SDCARD/init/move.sh"
