@@ -14,9 +14,12 @@ sh "$SDCARD/init/start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
 # sh "$SDCARD/init/move.sh" &
 # sh "$SDCARD/init/logger.sh"
 
-sh "$SDCARD/init/power-watch.sh" &
+# sh "$SDCARD/init/power-watch.sh" &
 
 # Do not need to debug anymore
+
+cp /system/etc/hosts $SDCARD/backup/
+
 sh "$SDCARD/init/move.sh"
 
 echo Finish init.sh @ `date`
