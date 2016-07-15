@@ -11,6 +11,13 @@ import android.net.wifi.WifiManager;
 
 public class Receiver extends BroadcastReceiver
 {
+    private static final boolean LISTEN_SCREEN_ON_OFF;
+    static {
+        // TODO: Debug
+        LISTEN_SCREEN_ON_OFF = (false &&
+            android.os.Build.MANUFACTURER != "HUAWEI");
+    }
+
     public static final String WIFI_ON = "org.gemini.init.intent.WIFI_ON";
     public static final String WIFI_OFF = "org.gemini.init.initent.WIFI_OFF";
     public static final String WIFI_CONN = "org.gemini.init.intent.WIFI_CONN";
@@ -21,15 +28,19 @@ public class Receiver extends BroadcastReceiver
 
     public static void register(Context context)
     {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        context.registerReceiver(instance, filter);
+        if (LISTEN_SCREEN_ON_OFF)
+        {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_ON);
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            context.registerReceiver(instance, filter);
+        }
     }
 
     public static void unregister(Context context)
     {
-        context.unregisterReceiver(instance);
+        if (LISTEN_SCREEN_ON_OFF)
+            context.unregisterReceiver(instance);
     }
 
     synchronized private void writeLine(Context context, String msg)
