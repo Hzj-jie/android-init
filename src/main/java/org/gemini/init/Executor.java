@@ -53,14 +53,24 @@ public final class Executor
         }
     }
 
+    private static final String internalStorageDirectory()
+    {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    private static final String externalStorageDirectory()
+    {
+        return System.getenv("SECONDARY_STORAGE");
+    }
+
     private final File internalInitDirectory()
     {
-        return new File(Environment.getExternalStorageDirectory(), initFolder);
+        return new File(internalStorageDirectory(), initFolder);
     }
 
     private final File externalInitDirectory()
     {
-        return new File(System.getenv("SECONDARY_STORAGE"), initFolder);
+        return new File(externalStorageDirectory(), initFolder);
     }
 
     private final List<String> buildCmd(String filename)
@@ -96,11 +106,14 @@ public final class Executor
             Process p = null;
             try
             {
-                p = new ProcessBuilder()
-                    .command(prog)
-                    .redirectErrorStream(true)
-                    .directory(logger.outDir)
-                    .start();
+                ProcessBuilder builder = new ProcessBuilder()
+                        .command(prog)
+                        .redirectErrorStream(true)
+                        .directory(logger.outDir);
+                builder.environment().put("SDCARD", externalStorageDirectory());
+                builder.environment().put("INTERNAL",
+                                          internalStorageDirectory());
+                p = builder.start();
             }
             catch (IOException ex)
             {
