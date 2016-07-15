@@ -115,7 +115,7 @@ public final class Executor
                                           internalStorageDirectory());
                 p = builder.start();
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
                 logger.notify("Failed to start process.");
                 return;
