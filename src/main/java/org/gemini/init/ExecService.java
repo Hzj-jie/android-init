@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.IBinder;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,6 +58,16 @@ public final class ExecService extends Service
     {
         Receiver.unregister(this);
         if (logger != null) logger.close();
+        for (int i = 0; i < switches.length; i++)
+        {
+            if (switches[i].running.get() == 1)
+            {
+                startService(new Intent(switches[i].action,
+                                        Uri.EMPTY,
+                                        this,
+                                        ExecService.class));
+            }
+        }
         super.onDestroy();
     }
 
