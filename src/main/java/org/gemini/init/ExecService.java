@@ -82,7 +82,7 @@ public final class ExecService extends Service
                     stopSelf(startId);
                 }
             }.start();
-            return START_STICKY;
+            return START_REDELIVER_INTENT;
         }
         else
         {
@@ -95,6 +95,12 @@ public final class ExecService extends Service
     public int onStartCommand(
         final Intent intent, final int flags, final int startId)
     {
+        if (intent == null)
+        {
+            stopSelf(startId);
+            return START_NOT_STICKY;
+        }
+
         logger.writeLine(">>>> Received service command " + intent.getAction() +
                          " at " + Logger.currentTime());
         for (int i = 0; i < switches.length; i++)
