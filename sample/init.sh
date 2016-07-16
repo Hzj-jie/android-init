@@ -2,8 +2,15 @@
 
 echo Start init.sh @ `date`
 
-# export SDCARD=/storage/sdcard1/
-# export INTERNAL=/storage/sdcard0/
+if [ -z "$SDCARD" ]
+then
+    export SDCARD=/storage/sdcard1/
+fi
+
+if [ -z "$INTERNAL" ]
+then
+    export INTERNAL=/storage/sdcard0/
+fi
 
 # sleep 120
 
@@ -15,7 +22,7 @@ sh "$SDCARD/init/start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
 # sh "$SDCARD/init/logger.sh"
 
 cp /system/etc/hosts $SDCARD/backup/
-# cp /system/build.prop $SDCARD/backup/emui3.1/build.prop.changed
+cp /system/build.prop $SDCARD/backup/emui3.1/build.prop.changed
 
 # sh "$SDCARD/init/power-watch.sh" &
 
