@@ -11,6 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ExecService extends Service
 {
     public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
+    private static final Object instanceLocker = new Object();
+    private static ExecService instance;
+
     private static final class Switch
     {
         public final String action;
@@ -36,6 +39,8 @@ public final class ExecService extends Service
         new Switch(ONE_SHOT, "one-shot.sh"),
     };
 
+    private static final int defaultSwitch = 0;
+
     private Logger logger;
 
     @Override
@@ -49,23 +54,35 @@ public final class ExecService extends Service
     public void onCreate()
     {
         super.onCreate();
-        logger = new Logger(this, "service.log");
-        Receiver.register(this);
+        if (instance != null) return;
+        synchronized (instanceLocker)
+        {
+            if (instance == null)
+                instance = this;
+        }
+        if (instance == this)
+        {
+            logger = new Logger(this, "service.log");
+            Receiver.register(this);
+        }
     }
 
     @Override
     public void onDestroy()
     {
-        Receiver.unregister(this);
-        if (logger != null) logger.close();
-        for (int i = 0; i < switches.length; i++)
+        if (instance == this)
         {
-            if (switches[i].running.get() == 1)
+            Receiver.unregister(this);
+            if (logger != null) logger.close();
+            for (int i = 0; i < switches.length; i++)
             {
-                startService(new Intent(switches[i].action,
-                                        Uri.EMPTY,
-                                        this,
-                                        ExecService.class));
+                if (switches[i].running.get() == 1)
+                {
+                    startService(new Intent(switches[i].action,
+                                            Uri.EMPTY,
+                                            this,
+                                            ExecService.class));
+                }
             }
         }
         super.onDestroy();
@@ -93,7 +110,7 @@ public final class ExecService extends Service
                     stopSelf(startId);
                 }
             }.start();
-            return START_REDELIVER_INTENT;
+            return START_STICKY;
         }
         else
         {
@@ -112,6 +129,9 @@ public final class ExecService extends Service
             return START_NOT_STICKY;
         }
 
+        if (instance != this)
+            return instance.onStartCommand(intent, flags, startId);
+
         logger.writeLine(">>>> Received service command " + intent.getAction() +
                          " at " + Logger.currentTime());
         for (int i = 0; i < switches.length; i++)
@@ -120,8 +140,7 @@ public final class ExecService extends Service
                 return exec(i, startId);
         }
 
-        stopSelf(startId);
-        return START_NOT_STICKY;
+        return exec(defaultSwitch, startId);
     }
 
     @Override

@@ -26,11 +26,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".ExecService" android:label="Exec Service">
-            <intent-filter>
-                <action android:name=".ExecService" />
-            </intent-filter>
-        </service>
+        <service android:name=".ExecService" android:label="Exec Service" />
 
         <activity android:name=".ActivateInitActivity"
             android:label="Activate Init"
