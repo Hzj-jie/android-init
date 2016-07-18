@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ExecService extends Service
 {
     public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
-    private static final Object instanceLocker = new Object();
     private static ExecService instance;
 
     private static final class Switch
@@ -43,6 +42,17 @@ public final class ExecService extends Service
 
     private Logger logger;
 
+    public ExecService()
+    {
+        super();
+        if (instance != null)  return;
+        synchronized (ExecService.class)
+        {
+            if (instance == null)
+                instance = this;
+        }
+    }
+
     @Override
     protected void finalize() throws Throwable
     {
@@ -54,12 +64,6 @@ public final class ExecService extends Service
     public void onCreate()
     {
         super.onCreate();
-        if (instance != null) return;
-        synchronized (instanceLocker)
-        {
-            if (instance == null)
-                instance = this;
-        }
         if (instance == this)
         {
             logger = new Logger(this, "service.log");
