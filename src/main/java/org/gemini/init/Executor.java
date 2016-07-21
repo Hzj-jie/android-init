@@ -76,7 +76,7 @@ public final class Executor
     private final List<String> buildCmd(String filename)
     {
         List<String> prog = new ArrayList<>();
-        prog.add("sh");
+        prog.add("/system/bin/sh");
         if (addIfExists(new File(internalInitDirectory(), filename), prog) ||
             addIfExists(new File(externalInitDirectory(), filename), prog) ||
             addIfExists(new File(context.getFilesDir(), filename), prog) ||
@@ -110,14 +110,21 @@ public final class Executor
                         .command(prog)
                         .redirectErrorStream(true)
                         .directory(logger.outDir);
-                builder.environment().put("SDCARD", externalStorageDirectory());
-                builder.environment().put("INTERNAL",
-                                          internalStorageDirectory());
+                if (externalStorageDirectory() != null)
+                {
+                    builder.environment().put("SDCARD",
+                                              externalStorageDirectory());
+                }
+                if (internalStorageDirectory() != null)
+                {
+                    builder.environment().put("INTERNAL",
+                                              internalStorageDirectory());
+                }
                 p = builder.start();
             }
             catch (Exception ex)
             {
-                logger.notify("Failed to start process.");
+                logger.notify("Failed to start process, ex " + ex.getMessage());
                 return;
             }
             BufferedReader in = new BufferedReader(
