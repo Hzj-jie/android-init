@@ -4,13 +4,17 @@ echo Start init.sh @ `date`
 
 if [ -z "$SDCARD" ]
 then
+    echo No SDCARD defined, use default value
     export SDCARD=/storage/sdcard1/
 fi
 
 if [ -z "$INTERNAL" ]
 then
+    echo No INTERNAL defined, use default value
     export INTERNAL=/storage/sdcard0/
 fi
+
+echo SDCARD=$SDCARD, INTERNAL=$INTERNAL
 
 # sleep 120
 

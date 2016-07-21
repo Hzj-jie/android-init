@@ -55,7 +55,12 @@ public final class Executor
 
     private static final String internalStorageDirectory()
     {
-        return Environment.getExternalStorageDirectory().getAbsolutePath();
+        String p = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String e = System.getenv("EXTERNAL_STORAGE");
+        if (p.equals(externalStorageDirectory()) && e != null)
+            return e;
+        else
+            return p;
     }
 
     private static final String externalStorageDirectory()
