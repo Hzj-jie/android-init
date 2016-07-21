@@ -31,6 +31,7 @@ public final class ExecService extends Service
         new Switch(Intent.ACTION_BOOT_COMPLETED, "init.sh"),
         new Switch(Intent.ACTION_SCREEN_ON, "screen-on.sh"),
         new Switch(Intent.ACTION_SCREEN_OFF, "screen-off.sh"),
+        new Switch(Intent.ACTION_USER_PRESENT, "screen-unlock.sh"),
         new Switch(Receiver.WIFI_ON, "wifi-on.sh"),
         new Switch(Receiver.WIFI_OFF, "wifi-off.sh"),
         new Switch(Receiver.WIFI_CONN, "wifi-connected.sh"),
@@ -64,19 +65,17 @@ public final class ExecService extends Service
     public void onCreate()
     {
         super.onCreate();
+        Receiver.register(this);
         if (instance == this)
-        {
             logger = new Logger(this, "service.log");
-            Receiver.register(this);
-        }
     }
 
     @Override
     public void onDestroy()
     {
+        Receiver.unregister(this);
         if (instance == this)
         {
-            Receiver.unregister(this);
             if (logger != null) logger.close();
             for (int i = 0; i < switches.length; i++)
             {

@@ -29,7 +29,11 @@ public class Receiver extends BroadcastReceiver
 
     public static void unregister(Context context)
     {
-        context.unregisterReceiver(instance);
+        try
+        {
+            context.unregisterReceiver(instance);
+        }
+        catch (Exception ex) {}
     }
 
     synchronized private void writeLine(Context context, String msg)
@@ -52,7 +56,8 @@ public class Receiver extends BroadcastReceiver
         writeLine(context, ">>>> Received action " + intent.getAction());
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
             Intent.ACTION_SCREEN_ON.equals(intent.getAction()) ||
-            Intent.ACTION_SCREEN_OFF.equals(intent.getAction()))
+            Intent.ACTION_SCREEN_OFF.equals(intent.getAction()) ||
+            Intent.ACTION_USER_PRESENT.equals(intent.getAction()))
         {
             context.startService(new Intent(intent.getAction(),
                                             Uri.EMPTY,
