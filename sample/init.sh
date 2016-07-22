@@ -32,6 +32,7 @@ cp /system/build.prop $SDCARD/backup/emui3.1/build.prop.changed
 
 # Do not need to debug anymore
 
+sh "$SDCARD/init/media-scanner.sh" &
 sh "$SDCARD/init/move.sh"
 
 echo Finish init.sh @ `date`
