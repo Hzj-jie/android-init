@@ -2,8 +2,8 @@
 
 echo in screen-off.sh
 
-# sh "$SDCARD/init/kill-all.sh" "com.google.android.gms"
-# sh "$SDCARD/init/kill-all.sh" "com.google.process.gapps"
+# sh "$CURRENT/kill-all.sh" "com.google.android.gms"
+# sh "$CURRENT/kill-all.sh" "com.google.process.gapps"
 # am force-stop com.google.android.gms
 # am force-stop com.google.process.gapps
 # am kill com.google.android.gms
