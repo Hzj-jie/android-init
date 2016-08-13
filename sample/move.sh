@@ -7,7 +7,7 @@ mkdir -p "$SDCARD/Download"
 
 while (true)
 do
-    for i in "$INTERNAL" "$SDCARD"
+    for i in "$INTERNAL" "$SDCARD" "/storage/self/primary/"
     do
         for j in "WeiXin" "WeChat"
         do
