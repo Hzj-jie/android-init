@@ -68,6 +68,10 @@ public final class ExecService extends Service
         Receiver.register(this);
         if (instance == this)
             logger = new Logger(this, "service.log");
+        startService(new Intent(switches[defaultSwitch].action,
+                                Uri.EMPTY,
+                                this,
+                                ExecService.class));
     }
 
     @Override
