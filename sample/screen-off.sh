@@ -12,3 +12,11 @@ echo in screen-off.sh
 # pm enable com.google.android.gms
 # pm disable com.google.process.gapps
 # pm enable com.google.process.gapps
+
+if [ -z "$CURRENT" ]
+then
+    echo No CURRENT defined, detect current script location
+    export CURRENT=$(dirname "$(readlink -f "$0")")
+fi
+
+sh "$CURRENT/gps-off.sh"
