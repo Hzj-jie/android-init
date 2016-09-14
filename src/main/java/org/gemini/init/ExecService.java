@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ExecService extends Service
 {
     public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
+    private static final String TAG = ExecService.class.getSimpleName();
     private static ExecService instance;
 
     private static final class Switch
@@ -46,7 +47,7 @@ public final class ExecService extends Service
     public ExecService()
     {
         super();
-        if (instance != null)  return;
+        if (instance != null) return;
         synchronized (ExecService.class)
         {
             if (instance == null)
@@ -66,32 +67,31 @@ public final class ExecService extends Service
     {
         super.onCreate();
         Receiver.register(this);
-        if (instance == this)
-            logger = new Logger(this, "service.log");
+        if (instance == this) logger = new Logger(this, "service.log");
+        /*
         startService(new Intent(switches[defaultSwitch].action,
                                 Uri.EMPTY,
                                 this,
                                 ExecService.class));
+        */
     }
 
     @Override
     public void onDestroy()
     {
         Receiver.unregister(this);
-        if (instance == this)
+        /*
+        for (int i = 0; i < switches.length; i++)
         {
-            if (logger != null) logger.close();
-            for (int i = 0; i < switches.length; i++)
+            if (switches[i].running.get() == 1)
             {
-                if (switches[i].running.get() == 1)
-                {
-                    startService(new Intent(switches[i].action,
-                                            Uri.EMPTY,
-                                            this,
-                                            ExecService.class));
-                }
+                startService(new Intent(switches[i].action,
+                                        Uri.EMPTY,
+                                        this,
+                                        ExecService.class));
             }
         }
+        */
         super.onDestroy();
     }
 
@@ -130,21 +130,25 @@ public final class ExecService extends Service
     public int onStartCommand(
         final Intent intent, final int flags, final int startId)
     {
-        if (intent == null)
-        {
-            stopSelf(startId);
-            return START_NOT_STICKY;
-        }
-
         if (instance != this)
             return instance.onStartCommand(intent, flags, startId);
 
-        logger.writeLine(">>>> Received service command " + intent.getAction() +
-                         " at " + Logger.currentTime());
-        for (int i = 0; i < switches.length; i++)
+        if (intent != null)
         {
-            if (switches[i].action.equals(intent.getAction()))
-                return exec(i, startId);
+            logger.writeLine(">>>> Received service command " +
+                             intent.getAction() +
+                             " at " +
+                             Logger.currentTime());
+            for (int i = 0; i < switches.length; i++)
+            {
+                if (switches[i].action.equals(intent.getAction()))
+                    return exec(i, startId);
+            }
+        }
+        else
+        {
+            logger.writeLine(">>>> Received service command [null] at " +
+                             Logger.currentTime());
         }
 
         return exec(defaultSwitch, startId);
