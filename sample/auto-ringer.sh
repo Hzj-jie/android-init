@@ -22,4 +22,6 @@ do
     sh "$CURRENT/ringer-normal.sh"
   then
   fi
+
+  sleep 900
 done
