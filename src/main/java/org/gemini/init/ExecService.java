@@ -68,30 +68,12 @@ public final class ExecService extends Service
         super.onCreate();
         Receiver.register(this);
         if (instance == this) logger = new Logger(this, "service.log");
-        /*
-        startService(new Intent(switches[defaultSwitch].action,
-                                Uri.EMPTY,
-                                this,
-                                ExecService.class));
-        */
     }
 
     @Override
     public void onDestroy()
     {
         Receiver.unregister(this);
-        /*
-        for (int i = 0; i < switches.length; i++)
-        {
-            if (switches[i].running.get() == 1)
-            {
-                startService(new Intent(switches[i].action,
-                                        Uri.EMPTY,
-                                        this,
-                                        ExecService.class));
-            }
-        }
-        */
         super.onDestroy();
     }
 

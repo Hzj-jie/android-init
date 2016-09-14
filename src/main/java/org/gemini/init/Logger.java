@@ -72,27 +72,35 @@ public final class Logger
 
     public final void notify(String title, String msg)
     {
-        Notification n = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        try
         {
-            Notification.Builder builder =  new Notification.Builder(context)
-                .setContentTitle(title)
-                .setSmallIcon(R.drawable.blank)
-                .setContentText(msg);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            Notification n = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             {
-                builder.setStyle(new Notification.BigTextStyle().bigText(msg));
-                n = builder.build();
+                Notification.Builder builder = new Notification.Builder(context)
+                    .setContentTitle(title)
+                    .setSmallIcon(R.drawable.blank)
+                    .setContentText(msg);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                {
+                    builder.setStyle(
+                        new Notification.BigTextStyle().bigText(msg));
+                    n = builder.build();
+                }
+                else
+                    n = getNotification(builder);
             }
             else
-                n = getNotification(builder);
+                n = buildNotification(R.drawable.blank, msg, 0);
+            NotificationManager m =
+                (NotificationManager) context.getSystemService(
+                    Context.NOTIFICATION_SERVICE);
+            m.notify(0, n);
         }
-        else
-            n = buildNotification(R.drawable.blank, msg, 0);
-        NotificationManager m =
-            (NotificationManager) context.getSystemService(
-                Context.NOTIFICATION_SERVICE);
-        m.notify(0, n);
+        catch (Exception ex)
+        {
+            writeLine("Failed to create notification, ex " + ex.getMessage());
+        }
         writeLine("[" + title + "]: " + msg);
     }
 
