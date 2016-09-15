@@ -33,5 +33,5 @@ do
     fi
   fi
 
-  sleep 60
+  sleep 600
 done
