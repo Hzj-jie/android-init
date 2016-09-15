@@ -6,7 +6,7 @@ do
   MINUTE=$(date +%M)
   DAY=$(date +%u)
 
-  if [ "$HOUR" -ge 23 -a "$HOUR" -le 7 ]
+  if [ "$HOUR" -ge 23 -o "$HOUR" -le 7 ]
   then
     # 23:00 - 08:00 -- vibrate mode
     sh "$CURRENT/ringer-vibrate.sh"
