@@ -39,7 +39,7 @@ cp /system/build.prop $SDCARD/backup/emui4.0/build.prop.changed
 
 # Do not need to debug anymore
 
-# sh "$CURRENT/media-scanner.sh" &
+sh "$CURRENT/media-scanner.sh" &
 sh "$CURRENT/auto-ringer.sh" &
 sh "$CURRENT/move.sh"
 
