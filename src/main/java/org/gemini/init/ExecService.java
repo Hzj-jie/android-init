@@ -67,7 +67,16 @@ public final class ExecService extends Service
     {
         super.onCreate();
         Receiver.register(this);
-        if (instance == this) logger = new Logger(this, "service.log");
+        if (instance == this)
+        {
+            logger = new Logger(this, "service.log");
+            // This ensures no matter how the service started, the default
+            // intent is always executed.
+            startService(new Intent(switches[defaultSwitch].action,
+                                    Uri.EMPTY,
+                                    this,
+                                    ExecService.class));
+        }
     }
 
     @Override
