@@ -19,4 +19,5 @@ then
     export CURRENT=$(dirname "$(readlink -f "$0")")
 fi
 
-sh "$CURRENT/gps-off.sh"
+sh "$CURRENT/gps-off.sh" &
+sh "$CURRENT/turn-off-wifi.sh" &
