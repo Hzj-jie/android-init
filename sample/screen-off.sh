@@ -13,6 +13,19 @@ echo in screen-off.sh
 # pm disable com.google.process.gapps
 # pm enable com.google.process.gapps
 
+if [ -z "$INTERNAL" ]
+then
+    echo No INTERNAL defined, use default value
+    export INTERNAL=/storage/sdcard0/
+fi
+
+if [ -z "$SDCARD" ]
+then
+    echo No SDCARD defined, use default value as '$INTERNAL'
+    # export SDCARD=/storage/sdcard1/
+    export SDCARD=$INTERNAL
+fi
+
 if [ -z "$CURRENT" ]
 then
     echo No CURRENT defined, detect current script location
