@@ -22,5 +22,5 @@ then
 fi
 
 sh "$CURRENT/gps-on.sh" &
-sh "$CURRENT/change-wallpaper.sh" &
-sh "$CURRENT/turn-on-wifi.sh" &
+# sh "$CURRENT/change-wallpaper.sh" &
+# sh "$CURRENT/turn-on-wifi.sh" &
