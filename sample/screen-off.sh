@@ -33,5 +33,5 @@ then
 fi
 
 sh "$CURRENT/gps-off.sh" &
-# sh "$CURRENT/turn-off-wifi.sh" &
+sh "$CURRENT/turn-off-wifi.sh" &
 sh "$CURRENT/change-wallpaper.sh" &
