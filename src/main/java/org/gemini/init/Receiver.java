@@ -25,16 +25,20 @@ public class Receiver extends BroadcastReceiver
         "org.gemini.init.intent.SIGNAL_STRENGTHS";
     public static final String SIGNAL_STRENGTHS_EXTRA = "LEVEL";
     private static final Receiver instance = new Receiver();
+    private static int lastLevel = -1;
     private Logger logger;
 
     private static void broadcastSignalStrength(Context context, int level) {
         instance.writeLine(context, ">>>> Received signal level " + level);
-        Intent intent = new Intent(SIGNAL_STRENGTHS,
-                                   Uri.EMPTY,
-                                   context,
-                                   ExecService.class);
-        intent.putExtra(SIGNAL_STRENGTHS_EXTRA, level);
-        context.startService(intent);
+        if (lastLevel != level) {
+            lastLevel = level;
+            Intent intent = new Intent(SIGNAL_STRENGTHS,
+                                       Uri.EMPTY,
+                                       context,
+                                       ExecService.class);
+            intent.putExtra(SIGNAL_STRENGTHS_EXTRA, level);
+            context.startService(intent);
+        }
     }
 
     private static int asuToLevel(int asu) {
