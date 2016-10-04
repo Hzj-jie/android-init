@@ -12,23 +12,29 @@ import java.lang.Process;
 import java.lang.ProcessBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class Executor
 {
     private final Context context;
     private final String initFolder;
     private final String filename;
+    private final Map<String, String> envs;
 
-    public Executor(Context context, String initFolder, String filename)
+    public Executor(Context context,
+                    String initFolder,
+                    String filename,
+                    Map<String, String> envs)
     {
         this.context = context;
         this.initFolder = initFolder;
         this.filename = filename;
+        this.envs = envs;
     }
 
-    public Executor(Context context, String filename)
+    public Executor(Context context, String filename, Map<String, String> envs)
     {
-        this(context, "init", filename);
+        this(context, "init", filename, envs);
     }
 
     private static final boolean addIfExists(File file, List<String> prog)
@@ -125,6 +131,12 @@ public final class Executor
                     builder.environment().put("INTERNAL",
                                               internalStorageDirectory());
                 }
+                if (envs != null) {
+                    for (Map.Entry<String, String> entry : envs.entrySet()) {
+                        builder.environment().put(entry.getKey(),
+                                                  entry.getValue());
+                    }
+                }
                 p = builder.start();
             }
             catch (Exception ex)
@@ -160,14 +172,18 @@ public final class Executor
         }
     }
 
-    public static final void exec(
-        Context context, String initFolder, String filename)
+    public static final void exec(Context context,
+                                  String initFolder,
+                                  String filename,
+                                  Map<String, String> envs)
     {
-        new Executor(context, initFolder, filename).exec();
+        new Executor(context, initFolder, filename, envs).exec();
     }
 
-    public static final void exec(Context context, String filename)
+    public static final void exec(Context context,
+                                  String filename,
+                                  Map<String, String> envs)
     {
-        new Executor(context, filename).exec();
+        new Executor(context, filename, envs).exec();
     }
 }

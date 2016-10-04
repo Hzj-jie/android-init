@@ -5,7 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExecService extends Service
@@ -37,8 +41,21 @@ public final class ExecService extends Service
         new Switch(Receiver.WIFI_OFF, "wifi-off.sh"),
         new Switch(Receiver.WIFI_CONN, "wifi-connected.sh"),
         new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected.sh"),
+        new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
         new Switch(ONE_SHOT, "one-shot.sh"),
     };
+
+    private static final Map<String, String> parseBundle(Bundle bundle) {
+        if (bundle == null) return null;
+        Map<String, String> r = new HashMap<String, String>();
+        Set<String> keys = bundle.keySet();
+        if (keys == null || keys.isEmpty()) return r;
+        for (String s : keys) {
+            Object obj = bundle.get(s);
+            if (obj != null) r.put(s, obj.toString());
+        }
+        return r;
+    }
 
     private static final int defaultSwitch = 0;
 
@@ -86,7 +103,7 @@ public final class ExecService extends Service
         super.onDestroy();
     }
 
-    private int exec(int switchId, final int startId)
+    private int exec(int switchId, final int startId, final Bundle bundle)
     {
         final String action = switches[switchId].action;
         final AtomicInteger running = switches[switchId].running;
@@ -101,7 +118,7 @@ public final class ExecService extends Service
                 @Override
                 public void run()
                 {
-                    Executor.exec(me, filename);
+                    Executor.exec(me, filename, parseBundle(bundle));
                     if (!running.compareAndSet(1, 0)) assert false;
                     logger.writeLine("Finished " + filename + " for action " +
                                      action + " at " + Logger.currentTime());
@@ -133,7 +150,7 @@ public final class ExecService extends Service
             for (int i = 0; i < switches.length; i++)
             {
                 if (switches[i].action.equals(intent.getAction()))
-                    return exec(i, startId);
+                    return exec(i, startId, intent.getExtras());
             }
         }
         else
@@ -142,7 +159,7 @@ public final class ExecService extends Service
                              Logger.currentTime());
         }
 
-        return exec(defaultSwitch, startId);
+        return exec(defaultSwitch, startId, intent.getExtras());
     }
 
     @Override
