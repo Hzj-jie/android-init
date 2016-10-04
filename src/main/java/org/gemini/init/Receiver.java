@@ -28,7 +28,8 @@ public class Receiver extends BroadcastReceiver
     private static int lastLevel = -1;
     private Logger logger;
 
-    private static void broadcastSignalStrength(Context context, int level) {
+    private static void broadcastSignalStrength(final Context context,
+                                                final int level) {
         instance.writeLine(context, ">>>> Received signal level " + level);
         if (lastLevel != level) {
             lastLevel = level;
@@ -124,9 +125,7 @@ public class Receiver extends BroadcastReceiver
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ECLAIR_MR1) {
                     instance.writeLine(context,
                                        ">>>> Received signal strength " + asu);
-                    if ((asu >= 0 && asu <= 31) || asu == 99) {
-                        broadcastSignalStrength(context, asuToLevel(asu));
-                    }
+                    broadcastSignalStrength(context, asuToLevel(asu));
                 }
                 super.onSignalStrengthChanged(asu);
             }
