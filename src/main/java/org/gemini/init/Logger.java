@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 public final class Logger
 {
+    private static final boolean DEBUGGING = false;
     public final File outDir;
     public final PrintWriter writer;
     private final Context context;
@@ -29,15 +31,17 @@ public final class Logger
         else
             outDir = context.getFilesDir();
         PrintWriter writer = null;
-        try
-        {
-            writer = new PrintWriter(
-                new FileWriter(new File(outDir, filename), true));
-        }
-        catch (Exception ex)
-        {
-            notify("Failed to create writer of " + outDir +
-                   ", ex " + ex.getMessage());
+        if (DEBUGGING) {
+            try
+            {
+                writer = new PrintWriter(
+                    new FileWriter(new File(outDir, filename), true));
+            }
+            catch (Exception ex)
+            {
+                notify("Failed to create writer of " + outDir +
+                       ", ex " + ex.getMessage());
+            }
         }
         this.writer = writer;
     }
@@ -111,11 +115,16 @@ public final class Logger
 
     public final boolean writeLine(String msg)
     {
-        if (writer == null)
-            return false;
-        writer.println(msg);
-        writer.flush();
-        return true;
+        if (DEBUGGING) {
+            if (writer == null)
+                return false;
+            writer.println(msg);
+            writer.flush();
+            return true;
+        } else {
+            Log.w("Android-Init", msg);
+            return true;
+        }
     }
 
     public final void close()
