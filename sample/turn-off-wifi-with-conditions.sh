@@ -12,4 +12,10 @@ then
     exit 0
 fi
 
+ps | grep com.google.android.apps.photos
+if [ $? -eq 0 ]
+then
+    exit 0
+fi
+
 sh "$CURRENT/turn-off-wifi.sh"

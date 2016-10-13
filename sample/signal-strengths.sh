@@ -22,3 +22,10 @@ then
 fi
 
 echo LEVEL $LEVEL
+if [ $LEVEL -le 1 ]
+then
+    sh $CURRENT/turn-on-wifi.sh
+elif [ $LEVEL -ge 3 ]
+then
+    sh $CURRENT/turn-off-wifi-with-conditions.sh
+fi
