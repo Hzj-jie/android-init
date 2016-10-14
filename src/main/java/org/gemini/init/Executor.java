@@ -137,6 +137,21 @@ public final class Executor
                                                   entry.getValue());
                     }
                 }
+                builder.environment().put(
+                    "WIFI_ON",
+                    String.valueOf(Receiver.Status.wifiIsOn()));
+                builder.environment().put(
+                    "WIFI_CONNECT",
+                    String.valueOf(Receiver.Status.wifiIsConnected()));
+                builder.environment().put(
+                    "SIGNAL_STRENGTH",
+                    String.valueOf(Receiver.Status.signalStrength()));
+                builder.environment().put(
+                    "SCREEN_ON",
+                    String.valueOf(Receiver.Status.screenIsOn()));
+                builder.environment().put(
+                    "USER_PRESENT",
+                    String.valueOf(Receiver.Status.userIsPresenting()));
                 p = builder.start();
             }
             catch (Exception ex)

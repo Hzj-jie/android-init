@@ -16,6 +16,68 @@ import android.telephony.TelephonyManager;
 
 public class Receiver extends BroadcastReceiver
 {
+    public static class Status
+    {
+        public static boolean wifiIsOn()
+        {
+            return wifiIsOn;
+        }
+
+        public static boolean wifiIsConnected()
+        {
+            return wifiIsConnected;
+        }
+
+        public static int signalStrength()
+        {
+            return signalStrength;
+        }
+
+        public static boolean screenIsOn()
+        {
+            return screenIsOn;
+        }
+
+        public static boolean userIsPresenting()
+        {
+            return userIsPresenting;
+        }
+
+        protected static boolean wifiIsOn;
+        protected static boolean wifiIsConnected;
+        protected static int signalStrength;
+        protected static boolean screenIsOn;
+        protected static boolean userIsPresenting;
+
+        private static class Settable extends Status
+        {
+            public static void setWifiIsOn(boolean v)
+            {
+                wifiIsOn = v;
+            }
+
+            public static void setWifiIsConnected(boolean v)
+            {
+                wifiIsConnected = v;
+            }
+
+            public static void setSignalStrength(int v)
+            {
+                signalStrength = v;
+            }
+
+            public static void setScreenIsOn(boolean v)
+            {
+                screenIsOn = v;
+            }
+
+            public static void setUserIsPresenting(boolean v)
+            {
+                userIsPresenting = v;
+            }
+        }
+    }
+
     public static final String WIFI_ON = "org.gemini.init.intent.WIFI_ON";
     public static final String WIFI_OFF = "org.gemini.init.initent.WIFI_OFF";
     public static final String WIFI_CONN = "org.gemini.init.intent.WIFI_CONN";
@@ -25,14 +87,14 @@ public class Receiver extends BroadcastReceiver
         "org.gemini.init.intent.SIGNAL_STRENGTHS";
     public static final String SIGNAL_STRENGTHS_EXTRA = "LEVEL";
     private static final Receiver instance = new Receiver();
-    private static int lastLevel = -1;
+    private static PhoneStateListener phoneStateListener;
     private Logger logger;
 
     private static void broadcastSignalStrength(final Context context,
                                                 final int level) {
         instance.writeLine(context, ">>>> Received signal level " + level);
-        if (lastLevel != level) {
-            lastLevel = level;
+        if (Status.signalStrength() != level) {
+            Status.Settable.setSignalStrength(level);
             Intent intent = new Intent(SIGNAL_STRENGTHS,
                                        Uri.EMPTY,
                                        context,
@@ -64,7 +126,7 @@ public class Receiver extends BroadcastReceiver
     private static void registerTelephony(final Context context) {
         TelephonyManager manager = (TelephonyManager)
             context.getSystemService(Context.TELEPHONY_SERVICE);
-        manager.listen(new PhoneStateListener() {
+        phoneStateListener = new PhoneStateListener() {
             @Override
             public void onSignalStrengthsChanged(
                 SignalStrength signalStrength) {
@@ -129,9 +191,10 @@ public class Receiver extends BroadcastReceiver
                 }
                 super.onSignalStrengthChanged(asu);
             }
-        },
-        PhoneStateListener.LISTEN_SIGNAL_STRENGTH |
-        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        };
+        manager.listen(phoneStateListener,
+                       PhoneStateListener.LISTEN_SIGNAL_STRENGTH |
+                       PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
     private static void registerScreen(Context context) {
@@ -154,6 +217,13 @@ public class Receiver extends BroadcastReceiver
             context.unregisterReceiver(instance);
         }
         catch (Exception ex) {}
+        if (phoneStateListener != null)
+        {
+            TelephonyManager manager = (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+            manager.listen(phoneStateListener,
+                           PhoneStateListener.LISTEN_NONE);
+        }
     }
 
     synchronized private void writeLine(Context context, String msg)
@@ -179,6 +249,19 @@ public class Receiver extends BroadcastReceiver
             Intent.ACTION_SCREEN_OFF.equals(intent.getAction()) ||
             Intent.ACTION_USER_PRESENT.equals(intent.getAction()))
         {
+            if (Intent.ACTION_SCREEN_ON.equals(intent.getAction()))
+            {
+                Status.Settable.setScreenIsOn(true);
+            }
+            else if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction()))
+            {
+                Status.Settable.setScreenIsOn(false);
+                Status.Settable.setUserIsPresenting(false);
+            }
+            else if (Intent.ACTION_USER_PRESENT.equals(intent.getAction()))
+            {
+                Status.Settable.setUserIsPresenting(true);
+            }
             context.startService(new Intent(intent.getAction(),
                                             Uri.EMPTY,
                                             context,
@@ -189,8 +272,9 @@ public class Receiver extends BroadcastReceiver
         {
             WifiManager wifi = (WifiManager)
                 context.getSystemService(Context.WIFI_SERVICE);
-            if (wifi.isWifiEnabled()==true)
+            if (wifi.isWifiEnabled())
             {
+                Status.Settable.setWifiIsOn(true);
                 context.startService(new Intent(WIFI_ON,
                                                 Uri.EMPTY,
                                                 context,
@@ -198,6 +282,7 @@ public class Receiver extends BroadcastReceiver
             }
             else
             {
+                Status.Settable.setWifiIsOn(false);
                 context.startService(new Intent(WIFI_OFF,
                                                 Uri.EMPTY,
                                                 context,
@@ -209,6 +294,7 @@ public class Receiver extends BroadcastReceiver
             if (netInfo != null &&
                 netInfo.getType() == ConnectivityManager.TYPE_WIFI)
             {
+                Status.Settable.setWifiIsConnected(true);
                 context.startService(new Intent(WIFI_CONN,
                                                 Uri.EMPTY,
                                                 context,
@@ -216,6 +302,7 @@ public class Receiver extends BroadcastReceiver
             }
             else
             {
+                Status.Settable.setWifiIsConnected(false);
                 context.startService(new Intent(WIFI_DISCONN,
                                                 Uri.EMPTY,
                                                 context,
