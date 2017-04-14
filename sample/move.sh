@@ -33,7 +33,7 @@ do
         mv "$INTERNAL/Download/"* "$SDCARD/Download/" 1>/dev/null 2>&1
         mv "$INTERNAL/Pictures/Screenshots/"* "$SDCARD/Pictures/Screenshots/" 1>/dev/null 2>&1
     fi
-    sh "$CURRENT/copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/" 1>/dev/null 2>&1
+    sh "./copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/" 1>/dev/null 2>&1
 
     mv "$SDCARD/Android/data/com.dv.adm/files/"* "$SDCARD/Download/" 1>/dev/null 2>&1
 

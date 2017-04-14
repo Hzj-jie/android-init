@@ -6,8 +6,8 @@ do
 
   if [ "$HOUR" -ge 3 -a "$HOUR" -le 5 ]
   then
-    sh "$CURRENT/start-activity.sh" org.gemini.media_scanner .MediaScannerActivity
-    sh "$CURRENT/wait-process.sh" "org.gemini.media_scanner"
+    sh "./start-activity.sh" org.gemini.media_scanner .MediaScannerActivity
+    sh "./wait-process.sh" "org.gemini.media_scanner"
   fi
 
   sleep 3600

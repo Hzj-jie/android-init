@@ -2,4 +2,4 @@
 
 echo in one-shot.sh
 
-sh "$CURRENT/gps-on.sh"
+sh "./gps-on.sh"

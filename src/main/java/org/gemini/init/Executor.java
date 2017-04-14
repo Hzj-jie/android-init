@@ -37,14 +37,12 @@ public final class Executor
         this(context, "init", filename, envs);
     }
 
-    private static final boolean addIfExists(File file, List<String> prog)
+    private static final void addIfExists(File file, List<String> prog)
     {
         if (file.exists())
         {
             prog.add(file.getAbsolutePath());
-            return true;
         }
-        return false;
     }
 
     private static final int waitFor(Process p)
@@ -87,23 +85,107 @@ public final class Executor
     private final List<String> buildCmd(String filename)
     {
         List<String> prog = new ArrayList<>();
+        addIfExists(new File(internalInitDirectory(), filename), prog);
+        addIfExists(new File(externalInitDirectory(), filename), prog);
+        addIfExists(new File(context.getFilesDir(), filename), prog);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+        {
+           addIfExists(
+               new File(context.getExternalFilesDir(null), filename), prog);
+        }
+        return prog;
+    }
+
+    private final void exec(final Logger logger, final String script) {
+        logger.writeLine(">>>> Start command " + script);
+        Process p = null;
+        List<String> prog = new ArrayList<>();
         prog.add("/system/bin/sh");
-        if (addIfExists(new File(internalInitDirectory(), filename), prog) ||
-            addIfExists(new File(externalInitDirectory(), filename), prog) ||
-            addIfExists(new File(context.getFilesDir(), filename), prog) ||
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO &&
-             addIfExists(new File(context.getExternalFilesDir(null), filename),
-                         prog)))
-            return prog;
-        return null;
+        prog.add(script);
+        try
+        {
+            ProcessBuilder builder = new ProcessBuilder()
+                    .command(prog)
+                    .redirectErrorStream(true)
+                    .directory((new File(script)).getParentFile());
+            if (internalStorageDirectory() != null)
+            {
+                builder.environment().put(
+                    "INTERNAL", internalStorageDirectory());
+            }
+            else
+            {
+                builder.environment().put("INTERNAL", "/storage/sdcard0");
+            }
+            if (externalStorageDirectory() != null)
+            {
+                builder.environment().put(
+                    "SDCARD", externalStorageDirectory());
+            }
+            else
+            {
+                builder.environment().put(
+                    "SDCARD", builder.environment().get("INTERNAL"));
+            }
+            if (envs != null) {
+                for (Map.Entry<String, String> entry : envs.entrySet())
+                {
+                    builder.environment().put(entry.getKey(), entry.getValue());
+                }
+            }
+            builder.environment().put(
+                "CURRENT", (new File(script)).getParent());
+            builder.environment().put(
+                "OUTPUT_DIR", logger.outDir.getAbsolutePath());
+            builder.environment().put(
+                "WIFI_ON",
+                String.valueOf(Receiver.Status.wifiIsOn()));
+            builder.environment().put(
+                "WIFI_CONNECT",
+                String.valueOf(Receiver.Status.wifiIsConnected()));
+            builder.environment().put(
+                "SIGNAL_STRENGTH",
+                String.valueOf(Receiver.Status.signalStrength()));
+            builder.environment().put(
+                "SCREEN_ON",
+                String.valueOf(Receiver.Status.screenIsOn()));
+            builder.environment().put(
+                "USER_PRESENT",
+                String.valueOf(Receiver.Status.userIsPresenting()));
+            p = builder.start();
+        }
+        catch (Exception ex)
+        {
+            logger.notify("Failed to start process, ex " + ex.getMessage());
+            return;
+        }
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(p.getInputStream()), 1);
+        try
+        {
+            String line = null;
+            while ((line = in.readLine()) != null)
+            {
+                if (!logger.writeLine(line))
+                    return;
+            }
+        }
+        catch (IOException ex)
+        {
+            logger.notify("Failed to read process output.");
+        }
+        int r = waitFor(p);
+        logger.writeLine(">>>> Instance finishes at " +
+                         Logger.currentTime() +
+                         ", with exit code " +
+                         r);
     }
 
     private final void exec()
     {
         final Logger logger = new Logger(context, filename + ".log");
-        if (!logger.writeLine(">>>> Instance " + filename +
-                              " starts at " + Logger.currentTime()))
-            return;
+        logger.writeLine(">>>> Instance " + filename +
+                         " starts at " + Logger.currentTime());
         try
         {
             List<String> prog = buildCmd(filename);
@@ -112,74 +194,10 @@ public final class Executor
                 logger.writeLine("No " + filename + " scripts found.");
                 return;
             }
-            if (!logger.writeLine(">>>> Start command " + prog))
-                return;
-            Process p = null;
-            try
-            {
-                ProcessBuilder builder = new ProcessBuilder()
-                        .command(prog)
-                        .redirectErrorStream(true)
-                        .directory(logger.outDir);
-                if (externalStorageDirectory() != null)
-                {
-                    builder.environment().put("SDCARD",
-                                              externalStorageDirectory());
-                }
-                if (internalStorageDirectory() != null)
-                {
-                    builder.environment().put("INTERNAL",
-                                              internalStorageDirectory());
-                }
-                if (envs != null) {
-                    for (Map.Entry<String, String> entry : envs.entrySet()) {
-                        builder.environment().put(entry.getKey(),
-                                                  entry.getValue());
-                    }
-                }
-                builder.environment().put(
-                    "WIFI_ON",
-                    String.valueOf(Receiver.Status.wifiIsOn()));
-                builder.environment().put(
-                    "WIFI_CONNECT",
-                    String.valueOf(Receiver.Status.wifiIsConnected()));
-                builder.environment().put(
-                    "SIGNAL_STRENGTH",
-                    String.valueOf(Receiver.Status.signalStrength()));
-                builder.environment().put(
-                    "SCREEN_ON",
-                    String.valueOf(Receiver.Status.screenIsOn()));
-                builder.environment().put(
-                    "USER_PRESENT",
-                    String.valueOf(Receiver.Status.userIsPresenting()));
-                p = builder.start();
+
+            for (final String script : prog) {
+                exec(logger, script);
             }
-            catch (Exception ex)
-            {
-                logger.notify("Failed to start process, ex " + ex.getMessage());
-                return;
-            }
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(p.getInputStream()), 1);
-            try
-            {
-                String line = null;
-                while ((line = in.readLine()) != null)
-                {
-                    if (!logger.writeLine(line))
-                        return;
-                }
-            }
-            catch (IOException ex)
-            {
-                logger.notify("Failed to read process output.");
-            }
-            int r = waitFor(p);
-            if (!logger.writeLine(">>>> Instance finishes at " +
-                                  Logger.currentTime() +
-                                  ", with exit code " +
-                                  r))
-                return;
         }
         finally
         {

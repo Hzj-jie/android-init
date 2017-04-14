@@ -1,5 +1,11 @@
 #!/system/bin/sh
 
+sh ./office-hours.sh
+if [ $? -eq 1 ]
+then
+  exit 0
+fi
+
 ps | grep com.android.vending
 if [ $? -eq 0 ]
 then
@@ -28,4 +34,4 @@ then
   exit 0
 fi
 
-sh "$CURRENT/turn-off-wifi.sh"
+sh ./turn-off-wifi.sh
