@@ -7,25 +7,25 @@ then
 fi
 
 sh ./process-running.sh com.android.vending
-if [ $? -eq 0 ]
+if [ $? -eq 1 ]
 then
   exit 0
 fi
 
 sh ./process-running.sh ne.lushi.lushilauncher
-if [ $? -eq 0 ]
+if [ $? -eq 1 ]
 then
   exit 0
 fi
 
 sh ./process-running.sh com.google.android.apps.photos
-if [ $? -eq 0 ]
+if [ $? -eq 1 ]
 then
   exit 0
 fi
 
 sh ./process-running.sh com.theolivetree.ftpserver
-if [ $? -eq 0 ]
+if [ $? -eq 1 ]
 then
   exit 0
 fi
