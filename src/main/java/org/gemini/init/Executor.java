@@ -175,7 +175,7 @@ public final class Executor
             logger.notify("Failed to read process output.");
         }
         int r = waitFor(p);
-        logger.writeLine(">>>> Instance finishes at " +
+        logger.writeLine(">>>> Instance " + script + " finishes at " +
                          Logger.currentTime() +
                          ", with exit code " +
                          r);
