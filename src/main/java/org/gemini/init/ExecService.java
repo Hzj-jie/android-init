@@ -103,7 +103,7 @@ public final class ExecService extends Service
         super.onDestroy();
     }
 
-    private int exec(int switchId, final int startId, final Bundle bundle)
+    private int exec(final int switchId, final int startId, final Bundle bundle)
     {
         final String action = switches[switchId].action;
         final AtomicInteger running = switches[switchId].running;
@@ -122,7 +122,11 @@ public final class ExecService extends Service
                     if (!running.compareAndSet(1, 0)) assert false;
                     logger.writeLine("Finished " + filename + " for action " +
                                      action + " at " + Logger.currentTime());
-                    stopSelf(startId);
+                    // Avoid the service from being killed.
+                    if (switchId != defaultSwitch)
+                    {
+                        stopSelf(startId);
+                    }
                 }
             }.start();
             return START_STICKY;
