@@ -18,6 +18,12 @@ then
   exit 0
 fi
 
+ps | grep com.theolivetree.ftpserver
+if [ $? -eq 0 ]
+then
+  exit 0
+fi
+
 if [ "$SIGNAL_STRENGTH" -le 1 ]
 then
   exit 0
