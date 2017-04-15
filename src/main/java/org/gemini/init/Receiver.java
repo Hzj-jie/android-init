@@ -43,11 +43,11 @@ public class Receiver extends BroadcastReceiver
             return userIsPresenting;
         }
 
-        protected static boolean wifiIsOn;
-        protected static boolean wifiIsConnected;
-        protected static int signalStrength;
-        protected static boolean screenIsOn;
-        protected static boolean userIsPresenting;
+        protected static boolean wifiIsOn = false;
+        protected static boolean wifiIsConnected = false;
+        protected static int signalStrength = 0;
+        protected static boolean screenIsOn = true;
+        protected static boolean userIsPresenting = true;
 
         private static class Settable extends Status
         {
