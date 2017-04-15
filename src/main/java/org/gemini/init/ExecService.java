@@ -129,6 +129,18 @@ public final class ExecService extends Service
                     }
                 }
             }.start();
+            // Avoid the service from being killed.
+            if (switchId == defaultSwitch)
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Thread.sleep(120 * 1000);
+                    }
+                    catch (InterruptedException e) {}
+                }
+            }
             return START_STICKY;
         }
         else
