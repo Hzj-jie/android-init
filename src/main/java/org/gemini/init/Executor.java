@@ -152,6 +152,9 @@ public final class Executor
             builder.environment().put(
                 "USER_PRESENT",
                 String.valueOf(Receiver.Status.userIsPresenting()));
+            builder.environment().put(
+                "WIFI_SSID",
+                Receiver.Status.ssid());
             p = builder.start();
         }
         catch (Exception ex)

@@ -6,10 +6,10 @@ HOUR=$(date +%H)
 MINUTE=$(date +%M)
 DAY=$(date +%u)
 
-if [ "$DAY" -ge 1 -a "$DAY" -le 5 ]
+if [ "$DAY" -ge 1 ] && [ "$DAY" -le 5 ]
 then
   # working day
-  if [ "$HOUR" -ge 10 -a "$HOUR" -le 18 ]
+  if [ "$HOUR" -ge 10 ] && [ "$HOUR" -le 18 ]
   then
     exit 1
   fi

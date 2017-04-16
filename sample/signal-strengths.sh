@@ -2,7 +2,6 @@
 
 echo in signal-strengths.sh
 
-echo LEVEL $LEVEL
 if [ $LEVEL -le 1 ]
 then
     sh ./turn-on-wifi.sh

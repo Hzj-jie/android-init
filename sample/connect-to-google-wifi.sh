@@ -2,9 +2,7 @@
 
 # return 1 if the device is now connecting to a google wifi
 
-NAME=$(sh ./current-wifi.sh)
-
-echo $NAME | grep -i google > /dev/null 2>&1
+echo $WIFI_SSID | grep -i google > /dev/null 2>&1
 if [ $? -eq 0 ]
 then
   exit 1

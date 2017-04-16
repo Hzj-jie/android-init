@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.telephony.PhoneStateListener;
@@ -43,11 +44,17 @@ public class Receiver extends BroadcastReceiver
             return userIsPresenting;
         }
 
+        public static String ssid()
+        {
+            return ssid;
+        }
+
         protected static boolean wifiIsOn = false;
         protected static boolean wifiIsConnected = false;
         protected static int signalStrength = 0;
         protected static boolean screenIsOn = true;
         protected static boolean userIsPresenting = true;
+        protected static String ssid = "";
 
         private static class Settable extends Status
         {
@@ -74,6 +81,11 @@ public class Receiver extends BroadcastReceiver
             public static void setUserIsPresenting(boolean v)
             {
                 userIsPresenting = v;
+            }
+
+            public static void setSsid(String v)
+            {
+                ssid = v;
             }
         }
     }
@@ -287,6 +299,15 @@ public class Receiver extends BroadcastReceiver
                                                 Uri.EMPTY,
                                                 context,
                                                 ExecService.class));
+            }
+            WifiInfo wifiInfo = wifi.getConnectionInfo();
+            if (wifiInfo != null)
+            {
+                Status.Settable.setSsid(wifiInfo.getSSID());
+            }
+            else
+            {
+                Status.Settable.setSsid("");
             }
             ConnectivityManager conMan = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
