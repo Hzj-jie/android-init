@@ -122,25 +122,9 @@ public final class ExecService extends Service
                     if (!running.compareAndSet(1, 0)) assert false;
                     logger.writeLine("Finished " + filename + " for action " +
                                      action + " at " + Logger.currentTime());
-                    // Avoid the service from being killed.
-                    if (switchId != defaultSwitch)
-                    {
-                        stopSelf(startId);
-                    }
+                    stopSelf(startId);
                 }
             }.start();
-            // Avoid the service from being killed.
-            if (switchId == defaultSwitch)
-            {
-                while (true)
-                {
-                    try
-                    {
-                        Thread.sleep(120 * 1000);
-                    }
-                    catch (InterruptedException e) {}
-                }
-            }
             return START_STICKY;
         }
         else
