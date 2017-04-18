@@ -155,6 +155,9 @@ public final class Executor
             builder.environment().put(
                 "WIFI_SSID",
                 Receiver.Status.ssid());
+            builder.environment().put(
+                "WIFI_LAST_SSID",
+                Receiver.Status.lastSsid());
             p = builder.start();
         }
         catch (Exception ex)

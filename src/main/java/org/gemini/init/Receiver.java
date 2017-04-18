@@ -49,12 +49,18 @@ public class Receiver extends BroadcastReceiver
             return ssid;
         }
 
+        public static String lastSsid()
+        {
+            return lastSsid;
+        }
+
         protected static boolean wifiIsOn = false;
         protected static boolean wifiIsConnected = false;
         protected static int signalStrength = 0;
         protected static boolean screenIsOn = true;
         protected static boolean userIsPresenting = true;
         protected static String ssid = "";
+        protected static String lastSsid = "";
 
         private static class Settable extends Status
         {
@@ -85,7 +91,11 @@ public class Receiver extends BroadcastReceiver
 
             public static void setSsid(String v)
             {
-                ssid = v;
+                if (ssid != v)
+                {
+                    lastSsid = ssid;
+                    ssid = v;
+                }
             }
         }
     }
