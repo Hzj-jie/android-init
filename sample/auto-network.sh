@@ -4,14 +4,19 @@ if [ -a "./stop-auto-network" ]
 then
   echo "stop-auto-network"
 else
-  sh ./office-hours.sh
-  OFFICE_HOUR=$?
-  sh ./connect-to-google-wifi.sh
-  CONNECT_TO_GOOGLE=$?
-  if [ $OFFICE_HOUR -eq 1 ] || [ $CONNECT_TO_GOOGLE -eq 1 ] || [ $SIGNAL_STRENGTH -le 1 ]
+  if [ $CARRIER = "China Mobile" ]
   then
-    sh ./enable-2g.sh
+    sh ./enable-4g.sh
   else
-    sh ./enable-3g.sh
+    sh ./office-hours.sh
+    OFFICE_HOUR=$?
+    sh ./connect-to-google-wifi.sh
+    CONNECT_TO_GOOGLE=$?
+    if [ $OFFICE_HOUR -eq 1 ] || [ $CONNECT_TO_GOOGLE -eq 1 ] || [ $SIGNAL_STRENGTH -le 1 ]
+    then
+      sh ./enable-2g.sh
+    else
+      sh ./enable-3g.sh
+    fi
   fi
 fi

@@ -54,6 +54,11 @@ public class Receiver extends BroadcastReceiver
             return lastSsid;
         }
 
+        public static String carrier()
+        {
+            return carrier;
+        }
+
         protected static boolean wifiIsOn = false;
         protected static boolean wifiIsConnected = false;
         protected static int signalStrength = 0;
@@ -61,6 +66,7 @@ public class Receiver extends BroadcastReceiver
         protected static boolean userIsPresenting = true;
         protected static String ssid = "";
         protected static String lastSsid = "";
+        protected static String carrier = "";
 
         private static class Settable extends Status
         {
@@ -97,6 +103,11 @@ public class Receiver extends BroadcastReceiver
                     ssid = v;
                 }
             }
+
+            public static void setCarrier(String v)
+            {
+                carrier = v;
+            }
         }
     }
 
@@ -124,6 +135,10 @@ public class Receiver extends BroadcastReceiver
             intent.putExtra(SIGNAL_STRENGTHS_EXTRA, level);
             context.startService(intent);
         }
+
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(
+            Context.TELEPHONY_SERVICE);
+        Status.Settable.setCarrier(manager.getNetworkOperatorName());
     }
 
     private static int asuToLevel(int asu) {
