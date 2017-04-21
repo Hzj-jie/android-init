@@ -18,6 +18,4 @@ cp /system/build.prop $SDCARD/backup/emui4.0/build.prop.changed
 
 # Do not need to debug anymore
 
-sh "./looper.sh"
-
 echo Finish init.sh @ `date`

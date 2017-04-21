@@ -190,7 +190,7 @@ public final class Executor
                          r);
     }
 
-    private final void exec()
+    private final int exec()
     {
         final Logger logger = new Logger(context, filename + ".log");
         logger.writeLine(">>>> Instance " + filename +
@@ -201,12 +201,13 @@ public final class Executor
             if (prog == null || prog.isEmpty())
             {
                 logger.writeLine("No " + filename + " scripts found.");
-                return;
+                return 0;
             }
 
             for (final String script : prog) {
                 exec(logger, script);
             }
+            return prog.size();
         }
         finally
         {
@@ -214,18 +215,18 @@ public final class Executor
         }
     }
 
-    public static final void exec(Context context,
-                                  String initFolder,
-                                  String filename,
-                                  Map<String, String> envs)
+    public static final int exec(Context context,
+                                 String initFolder,
+                                 String filename,
+                                 Map<String, String> envs)
     {
-        new Executor(context, initFolder, filename, envs).exec();
+        return (new Executor(context, initFolder, filename, envs)).exec();
     }
 
-    public static final void exec(Context context,
-                                  String filename,
-                                  Map<String, String> envs)
+    public static final int exec(Context context,
+                                 String filename,
+                                 Map<String, String> envs)
     {
-        new Executor(context, filename, envs).exec();
+        return (new Executor(context, filename, envs)).exec();
     }
 }

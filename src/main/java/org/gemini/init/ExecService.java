@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ExecService extends Service
 {
     public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
+    private static final String LOOPER = "org.gemini.init.intent.LOOPER";
     private static final String TAG = ExecService.class.getSimpleName();
     private static ExecService instance;
 
@@ -23,12 +24,19 @@ public final class ExecService extends Service
         public final String action;
         public final AtomicInteger running;
         public final String filename;
+        public final boolean repeat;
 
         public Switch(String action, String filename)
+        {
+            this(action, filename, false);
+        }
+
+        public Switch(String action, String filename, boolean repeat)
         {
             this.action = action;
             this.running = new AtomicInteger();
             this.filename = filename;
+            this.repeat = repeat;
         }
     }
 
@@ -43,6 +51,7 @@ public final class ExecService extends Service
         new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected.sh"),
         new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
         new Switch(ONE_SHOT, "one-shot.sh"),
+        new Switch(LOOPER, "looper.sh"),
     };
 
     private static final Map<String, String> parseBundle(Bundle bundle) {
@@ -58,6 +67,7 @@ public final class ExecService extends Service
     }
 
     private static final int defaultSwitch = 0;
+    private static final int defaultLooperSwitch = 10;
 
     private Logger logger;
 
@@ -88,8 +98,12 @@ public final class ExecService extends Service
         {
             logger = new Logger(this, "service.log");
             // This ensures no matter how the service started, the default
-            // intent is always executed.
+            // intents are always executed.
             startService(new Intent(switches[defaultSwitch].action,
+                                    Uri.EMPTY,
+                                    this,
+                                    ExecService.class));
+            startService(new Intent(switches[defaultLooperSwitch].action,
                                     Uri.EMPTY,
                                     this,
                                     ExecService.class));
@@ -108,6 +122,7 @@ public final class ExecService extends Service
         final String action = switches[switchId].action;
         final AtomicInteger running = switches[switchId].running;
         final String filename = switches[switchId].filename;
+        final boolean repeat = switches[switchId].repeat;
         final ExecService me = this;
         if (running.compareAndSet(0, 1))
         {
@@ -118,7 +133,12 @@ public final class ExecService extends Service
                 @Override
                 public void run()
                 {
-                    Executor.exec(me, filename, parseBundle(bundle));
+                    int r = 0;
+                    do
+                    {
+                        r = Executor.exec(me, filename, parseBundle(bundle));
+                    }
+                    while (r > 0 && repeat);
                     if (!running.compareAndSet(1, 0)) assert false;
                     logger.writeLine("Finished " + filename + " for action " +
                                      action + " at " + Logger.currentTime());

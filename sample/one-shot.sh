@@ -2,4 +2,4 @@
 
 echo in one-shot.sh
 
-sh "./gps-on.sh"
+sh ./current-wifi.sh
