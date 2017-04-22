@@ -159,6 +159,9 @@ public final class Executor
                 "WIFI_LAST_SSID",
                 Receiver.Status.lastSsid());
             builder.environment().put(
+                "WIFI_LAST_ACTIVE_SSID",
+                Receiver.Status.lastActiveSsid());
+            builder.environment().put(
                 "CARRIER",
                 Receiver.Status.carrier());
             p = builder.start();

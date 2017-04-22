@@ -54,6 +54,11 @@ public class Receiver extends BroadcastReceiver
             return lastSsid;
         }
 
+        public static String lastActiveSsid()
+        {
+            return lastActiveSsid;
+        }
+
         public static String carrier()
         {
             return carrier;
@@ -66,6 +71,7 @@ public class Receiver extends BroadcastReceiver
         protected static boolean userIsPresenting = true;
         protected static String ssid = "";
         protected static String lastSsid = "";
+        protected static String lastActiveSsid = "";
         protected static String carrier = "";
 
         private static class Settable extends Status
@@ -99,6 +105,10 @@ public class Receiver extends BroadcastReceiver
             {
                 if (ssid != v)
                 {
+                    if (ssid.length() > 0)
+                    {
+                        lastActiveSsid = ssid;
+                    }
                     lastSsid = ssid;
                     ssid = v;
                 }
@@ -136,9 +146,7 @@ public class Receiver extends BroadcastReceiver
             context.startService(intent);
         }
 
-        TelephonyManager manager = (TelephonyManager)context.getSystemService(
-            Context.TELEPHONY_SERVICE);
-        Status.Settable.setCarrier(manager.getNetworkOperatorName());
+        retrieveCarrier(context);
     }
 
     private static int asuToLevel(int asu) {
@@ -161,6 +169,7 @@ public class Receiver extends BroadcastReceiver
     @SuppressWarnings("deprecation")
     @TargetApi(7)
     private static void registerTelephony(final Context context) {
+        retrieveCarrier(context);
         TelephonyManager manager = (TelephonyManager)
             context.getSystemService(Context.TELEPHONY_SERVICE);
         phoneStateListener = new PhoneStateListener() {
@@ -245,6 +254,7 @@ public class Receiver extends BroadcastReceiver
     {
         registerScreen(context);
         registerTelephony(context);
+        retrieveWifiStatus(context);
     }
 
     public static void unregister(Context context)
@@ -263,7 +273,65 @@ public class Receiver extends BroadcastReceiver
         }
     }
 
-    synchronized private void writeLine(Context context, String msg)
+    private static void retrieveCarrier(final Context context)
+    {
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(
+            Context.TELEPHONY_SERVICE);
+        Status.Settable.setCarrier(manager.getNetworkOperatorName());
+    }
+
+    private static void retrieveWifiStatus(final Context context)
+    {
+        WifiManager wifi = (WifiManager)
+            context.getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled())
+        {
+            Status.Settable.setWifiIsOn(true);
+            context.startService(new Intent(WIFI_ON,
+                                            Uri.EMPTY,
+                                            context,
+                                            ExecService.class));
+        }
+        else
+        {
+            Status.Settable.setWifiIsOn(false);
+            context.startService(new Intent(WIFI_OFF,
+                                            Uri.EMPTY,
+                                            context,
+                                            ExecService.class));
+        }
+        WifiInfo wifiInfo = wifi.getConnectionInfo();
+        if (wifiInfo != null)
+        {
+            Status.Settable.setSsid(wifiInfo.getSSID());
+        }
+        else
+        {
+            Status.Settable.setSsid("");
+        }
+        ConnectivityManager conMan = (ConnectivityManager)
+            context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMan.getActiveNetworkInfo();
+        if (netInfo != null &&
+            netInfo.getType() == ConnectivityManager.TYPE_WIFI)
+        {
+            Status.Settable.setWifiIsConnected(true);
+            context.startService(new Intent(WIFI_CONN,
+                                            Uri.EMPTY,
+                                            context,
+                                            ExecService.class));
+        }
+        else
+        {
+            Status.Settable.setWifiIsConnected(false);
+            context.startService(new Intent(WIFI_DISCONN,
+                                            Uri.EMPTY,
+                                            context,
+                                            ExecService.class));
+        }
+    }
+
+    synchronized private void writeLine(final Context context, final String msg)
     {
         if (logger == null) logger = new Logger(context, "receiver.log");
         logger.writeLine(msg);
@@ -307,53 +375,7 @@ public class Receiver extends BroadcastReceiver
         else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(
                      intent.getAction()))
         {
-            WifiManager wifi = (WifiManager)
-                context.getSystemService(Context.WIFI_SERVICE);
-            if (wifi.isWifiEnabled())
-            {
-                Status.Settable.setWifiIsOn(true);
-                context.startService(new Intent(WIFI_ON,
-                                                Uri.EMPTY,
-                                                context,
-                                                ExecService.class));
-            }
-            else
-            {
-                Status.Settable.setWifiIsOn(false);
-                context.startService(new Intent(WIFI_OFF,
-                                                Uri.EMPTY,
-                                                context,
-                                                ExecService.class));
-            }
-            WifiInfo wifiInfo = wifi.getConnectionInfo();
-            if (wifiInfo != null)
-            {
-                Status.Settable.setSsid(wifiInfo.getSSID());
-            }
-            else
-            {
-                Status.Settable.setSsid("");
-            }
-            ConnectivityManager conMan = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-            if (netInfo != null &&
-                netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-            {
-                Status.Settable.setWifiIsConnected(true);
-                context.startService(new Intent(WIFI_CONN,
-                                                Uri.EMPTY,
-                                                context,
-                                                ExecService.class));
-            }
-            else
-            {
-                Status.Settable.setWifiIsConnected(false);
-                context.startService(new Intent(WIFI_DISCONN,
-                                                Uri.EMPTY,
-                                                context,
-                                                ExecService.class));
-            }
+            retrieveWifiStatus(context);
         }
     }
 }

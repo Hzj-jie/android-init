@@ -51,7 +51,7 @@ public final class ExecService extends Service
         new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected.sh"),
         new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
         new Switch(ONE_SHOT, "one-shot.sh"),
-        new Switch(LOOPER, "looper.sh"),
+        new Switch(LOOPER, "looper.sh", true),
     };
 
     private static final Map<String, String> parseBundle(Bundle bundle) {
