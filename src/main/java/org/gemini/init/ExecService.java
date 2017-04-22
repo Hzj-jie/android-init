@@ -97,16 +97,7 @@ public final class ExecService extends Service
         if (instance == this)
         {
             logger = new Logger(this, "service.log");
-            // This ensures no matter how the service started, the default
-            // intents are always executed.
-            startService(new Intent(switches[defaultSwitch].action,
-                                    Uri.EMPTY,
-                                    this,
-                                    ExecService.class));
-            startService(new Intent(switches[defaultLooperSwitch].action,
-                                    Uri.EMPTY,
-                                    this,
-                                    ExecService.class));
+            startDefaultServices();
         }
     }
 
@@ -115,6 +106,26 @@ public final class ExecService extends Service
     {
         Receiver.unregister(this);
         super.onDestroy();
+    }
+
+    private void startDefaultServices()
+    {
+        // This ensures no matter how the service started, the default
+        // intents are always executed.
+        startService(new Intent(switches[defaultSwitch].action,
+                                Uri.EMPTY,
+                                this,
+                                ExecService.class));
+        startService(new Intent(switches[defaultLooperSwitch].action,
+                                Uri.EMPTY,
+                                this,
+                                ExecService.class));
+    }
+
+    private int discardServiceRequest(final int startId)
+    {
+        stopSelf(startId);
+        return START_NOT_STICKY;
     }
 
     private int exec(final int switchId, final int startId, final Bundle bundle)
@@ -149,8 +160,7 @@ public final class ExecService extends Service
         }
         else
         {
-            stopSelf(startId);
-            return START_NOT_STICKY;
+            return discardServiceRequest(startId);
         }
     }
 
@@ -179,7 +189,8 @@ public final class ExecService extends Service
                              Logger.currentTime());
         }
 
-        return exec(defaultSwitch, startId, intent.getExtras());
+        startDefaultServices();
+        return discardServiceRequest(startId);
     }
 
     @Override
