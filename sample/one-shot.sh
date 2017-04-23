@@ -2,4 +2,5 @@
 
 echo in one-shot.sh
 
-sh ./current-wifi.sh
+# sh ./current-wifi.sh
+echo $CARRIER

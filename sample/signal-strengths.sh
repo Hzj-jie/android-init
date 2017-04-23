@@ -2,10 +2,23 @@
 
 echo in signal-strengths.sh
 
-if [ $LEVEL -le 1 ]
+if [ "$USER_PRESENT" != "true" ]
 then
-    sh ./turn-on-wifi.sh
-elif [ $LEVEL -ge 3 ]
-then
-    sh ./turn-off-wifi-with-conditions.sh
+  # sh ./connect-to-google-wifi.sh
+  # if [ $? -eq 1 ] || [ $SIGNAL_STRENGTH -le 1 ]
+  if [ $SIGNAL_STRENGTH -le 1 ]
+  then
+    sh ./enable-2g.sh &
+    sh ./turn-on-wifi.sh &
+  else
+      sh ./connected-to-tmobile-3g.sh
+      if [ $? -eq 1 ]
+        sh ./enable-3g.sh &
+      then
+
+      if [ $SIGNAL_STRENGTH -ge 3 ]
+      then
+        sh ./turn-off-wifi-with-conditions.sh &
+      fi
+  fi
 fi
