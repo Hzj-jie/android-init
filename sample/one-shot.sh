@@ -3,4 +3,5 @@
 echo in one-shot.sh
 
 # sh ./current-wifi.sh
-echo $CARRIER
+# echo $CARRIER
+sh ./auto-network.sh

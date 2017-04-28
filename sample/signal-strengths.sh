@@ -11,14 +11,15 @@ then
     sh ./enable-2g.sh &
     sh ./turn-on-wifi.sh &
   else
-      sh ./connected-to-tmobile-3g.sh
-      if [ $? -eq 1 ]
-        sh ./enable-3g.sh &
-      then
+    sh ./connected-to-tmobile-3g.sh
+    if [ $? -eq 1 ]
+    then
+      sh ./enable-3g.sh &
+    fi
 
-      if [ $SIGNAL_STRENGTH -ge 3 ]
-      then
-        sh ./turn-off-wifi-with-conditions.sh &
-      fi
+    if [ $SIGNAL_STRENGTH -ge 3 ]
+    then
+      sh ./turn-off-wifi-with-conditions.sh &
+    fi
   fi
 fi
