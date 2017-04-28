@@ -9,6 +9,6 @@ else
   then
     sh ./turn-on-wifi.sh
   else
-    sh ./turn-off-wifi-with-conditions.sh
+    sh ./turn-off-wifi.sh
   fi
 fi

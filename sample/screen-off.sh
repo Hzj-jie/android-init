@@ -14,7 +14,7 @@ echo in screen-off.sh
 # pm enable com.google.process.gapps
 
 sh "./gps-off.sh" &
-sh "./turn-off-wifi-with-conditions.sh" &
+# sh "./turn-off-wifi.sh" &
 sh "./change-wallpaper.sh" &
 sh "./auto-ringer.sh" &
 sh "./auto-network.sh" &
