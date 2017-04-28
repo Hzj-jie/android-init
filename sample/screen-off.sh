@@ -16,4 +16,5 @@ echo in screen-off.sh
 sh "./gps-off.sh" &
 sh "./turn-off-wifi-with-conditions.sh" &
 sh "./change-wallpaper.sh" &
-sh "./looper.sh" &
+sh "./auto-ringer.sh" &
+sh "./auto-network.sh" &
