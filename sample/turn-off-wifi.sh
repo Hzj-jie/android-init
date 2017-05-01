@@ -1,5 +1,11 @@
 #!/system/bin/sh
 
+if [ -a "./stop-turn-off-wifi" ]
+then
+  echo "stop-turn-off-wifi"
+  exit 0
+fi
+
 if [ "$WIFI_ON" == "false" ]
 then
   exit 0
@@ -24,6 +30,12 @@ then
 fi
 
 sh ./process-running.sh com.theolivetree.ftpserver
+if [ $? -eq 1 ]
+then
+  exit 0
+fi
+
+sh ./process-running.sh com.dv.adm
 if [ $? -eq 1 ]
 then
   exit 0
