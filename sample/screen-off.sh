@@ -18,3 +18,4 @@ sh "./gps-off.sh" &
 sh "./change-wallpaper.sh" &
 sh "./auto-ringer.sh" &
 sh "./auto-network.sh" &
+sh "./auto-wifi.sh" &
