@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-if [ "$WIFI_ON" == "true" ] || [ "$1" == "force" ]
+if [ "$WIFI_ON" == "true" ] && [ "$1" != "force" ]
 then
   exit 0
 fi
