@@ -18,6 +18,6 @@ else
   sh ./internet-accessible.sh
   if [ $? -eq 0 ]
   then
-    sh ./turn-on-wifi.sh
+    sh ./turn-on-wifi.sh force
   fi
 fi
