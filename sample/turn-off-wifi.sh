@@ -3,52 +3,52 @@
 if [ -a "./stop-turn-off-wifi" ]
 then
   echo "stop-turn-off-wifi"
-  exit 0
+  exit 1
 fi
 
 if [ "$WIFI_ON" == "false" ]
 then
-  exit 0
+  exit 2
 fi
 
 sh ./process-running.sh com.android.vending
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 3
 fi
 
 sh ./process-running.sh ne.lushi.lushilauncher
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 4
 fi
 
 sh ./process-running.sh com.google.android.apps.photos
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 5
 fi
 
 sh ./process-running.sh com.theolivetree.ftpserver
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 6
 fi
 
 sh ./process-running.sh com.dv.adm
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 7
 fi
 
 if [ "$SIGNAL_STRENGTH" -le 1 ]
 then
-  exit 0
+  exit 8
 fi
 
 if [ "$USER_PRESENT" == "true" ]
 then
-  exit 0
+  exit 9
 fi
 
 # t-mobile 3g is back to work again
@@ -56,13 +56,13 @@ fi
 sh ./office-hours.sh
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 10
 fi
 
 sh ./connect-to-google-wifi.sh
 if [ $? -eq 1 ]
 then
-  exit 0
+  exit 11
 fi
 '
 
