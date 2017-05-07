@@ -26,6 +26,4 @@ then
       fi
     fi
   fi
-
-  sh ./auto-wifi.sh
 fi

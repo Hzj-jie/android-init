@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+echo in looper.sh
+
 # These actions require an Android activity, which will impact the user.
 # Temporary disable this behavior: the following three commands almost not be
 # able to be executed.
