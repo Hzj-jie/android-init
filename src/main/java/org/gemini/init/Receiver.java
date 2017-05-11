@@ -225,6 +225,7 @@ public class Receiver extends BroadcastReceiver
                         }
                     }
                 }
+                retrieveCarrier(context);
                 super.onSignalStrengthsChanged(signalStrength);
             }
 
