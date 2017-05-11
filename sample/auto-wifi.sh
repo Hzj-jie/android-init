@@ -17,13 +17,12 @@ else
   if [ "$SIGNAL_STRENGTH" -ge 3 ]
   then
     sh ./turn-off-wifi.sh
+  fi
+  sh ./mobile-data-accessible.sh
+  if [ $? -eq 0 ]
+  then
+    sh ./turn-on-wifi.sh
   else
-    sh ./mobile-data-accessible.sh
-    if [ $? -eq 0 ]
-    then
-      sh ./turn-on-wifi.sh
-    else
-      sh ./turn-off-wifi.sh
-    fi
+    sh ./turn-off-wifi.sh
   fi
 fi
