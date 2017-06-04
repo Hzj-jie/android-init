@@ -14,10 +14,11 @@ else
   fi
   '
 
-  if [ "$SIGNAL_STRENGTH" -ge 3 ]
+  : 'if [ "$SIGNAL_STRENGTH" -ge 3 ]
   then
     sh ./turn-off-wifi.sh
   fi
+  '
   sh ./mobile-data-accessible.sh
   if [ $? -eq 0 ]
   then
