@@ -9,7 +9,7 @@ else
 
   if [ "$WIFI_CONNECT" == "true" ]
   then
-    sh ./enable-2g.sh
+    exit 0
   else
     if [ "$SIGNAL_STRENGTH" -le 1 ]
     then
