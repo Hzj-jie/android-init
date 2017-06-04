@@ -6,3 +6,4 @@ echo in screen-on.sh
 # sh "./auto-wifi.sh" &
 # sh "./change-wallpaper.sh" &
 # sh "./turn-on-wifi.sh" &
+sh ./auto-network.sh &
