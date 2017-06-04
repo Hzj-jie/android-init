@@ -2,4 +2,4 @@
 
 echo in wifi-connected.sh
 
-sh ./auto-network.sh
+# sh ./auto-network.sh

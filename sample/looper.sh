@@ -8,8 +8,8 @@ echo in looper.sh
 if [ "" != "true" ] || [ "$USER_PRESENT" != "true" ]
 then
   sh ./auto-ringer.sh &
-  sh ./auto-network.sh &
-  sh ./auto-wifi.sh &
+  # sh ./auto-network.sh &
+  # sh ./auto-wifi.sh &
   sh ./media-scanner.sh &
 fi
 sh ./move.sh &

@@ -17,5 +17,6 @@ sh "./gps-off.sh" &
 # sh "./turn-off-wifi.sh" &
 sh "./change-wallpaper.sh" &
 sh "./auto-ringer.sh" &
-sh "./auto-network.sh" &
-sh "./auto-wifi.sh" &
+# sh "./auto-network.sh" &
+# sh "./auto-wifi.sh" &
+sh "./enable-2g.sh" &
