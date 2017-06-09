@@ -2,7 +2,7 @@
 
 echo in signal-strengths.sh
 
-if [ "$USER_PRESENT" == "true" ]
+if [ "$USER_PRESENT" != "true" ] && [ "$SIGNAL_STRENGTH" -le 1 ]
 then
-  sh ./auto-network.sh
+  sh ./turn-on-wifi-if-no-network.sh
 fi
