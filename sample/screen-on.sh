@@ -2,8 +2,22 @@
 
 echo in screen-on.sh
 
-# sh "./gps-on.sh" &
-# sh "./auto-wifi.sh" &
-# sh "./change-wallpaper.sh" &
-# sh "./turn-on-wifi.sh" &
-sh ./auto-network.sh &
+if [ "$WIFI_CONNECT" == "true" ]
+then
+  exit 0
+else
+  if [ "$WIFI_ON" == "true" ]
+  then
+    # No WIFI
+    sh ./turn-off-wifi.sh
+    sh ./choose-3g-4g.sh
+  else
+    if [ "$SIGNAL_STRENGTH" -le 1 ]
+    then
+      sh ./enable-2g.sh
+      sh ./turn-on-wifi.sh
+    else
+      sh ./choose-3g-4g.sh
+    fi
+  fi
+fi
