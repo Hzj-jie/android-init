@@ -2,6 +2,8 @@
 
 echo in screen-on.sh
 
+sh ./set-assistant.sh
+
 if [ "$WIFI_CONNECT" == "true" ]
 then
   exit 0

@@ -3,4 +3,4 @@
 echo in screen-unlock.sh
 
 sh ./gps-on.sh &
-sh ./set-assistant.sh &
+# sh ./set-assistant.sh &
