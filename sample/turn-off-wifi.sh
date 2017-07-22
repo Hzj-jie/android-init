@@ -43,14 +43,20 @@ then
     exit 7
   fi
 
-  if [ "$SIGNAL_STRENGTH" -le 1 ]
+  sh ./process-running.sh com.icecoldapps.synchronizeultimate
+  if [ $? -eq 1 ]
   then
     exit 8
   fi
 
+  if [ "$SIGNAL_STRENGTH" -le 1 ]
+  then
+    exit 100
+  fi
+
   if [ "$USER_PRESENT" == "true" ]
   then
-    exit 9
+    exit 101
   fi
 
   # t-mobile 3g is back to work again
@@ -58,13 +64,13 @@ then
   sh ./office-hours.sh
   if [ $? -eq 1 ]
   then
-    exit 10
+    exit 102
   fi
 
   sh ./connect-to-google-wifi.sh
   if [ $? -eq 1 ]
   then
-    exit 11
+    exit 103
   fi
   '
 fi
