@@ -29,7 +29,7 @@ if [ "$SIGNAL_STRENGTH" -le 0 ]
 then
   PREFER_WIFI=1
 else
-  sh ./connected-to-tmobile-2g.sh
+  sh ./connected-to-2g.sh
   if [ $? -eq 1 ]
   then
     PREFER_WIFI=1
@@ -38,22 +38,24 @@ fi
 
 if [ "$PREFER_WIFI" -eq 1 ]
 then
-  sh ./enable-2g.sh
+  sh ./prefer-2g.sh
+  if [ $? -eq 0 ]
+  then
+    sh ./enable-2g.sh
+  fi
   if [ "$WIFI_ON" == "false" ]
   then
     sh ./turn-on-wifi.sh
   else
     if [ "$WIFI_CONNECT" == "false" ]
     then
-      if [ "$USER_PRESENT" == "false" ]
-      then
-        sh ./turn-off-wifi.sh
-      fi
+      sh ./turn-off-wifi.sh
     fi
   fi
 else
   if [ "$USER_PRESENT" == "false" ]
   then
     sh ./choose-3g-4g.sh
+    sh ./turn-off-wifi.sh
   fi
 fi
