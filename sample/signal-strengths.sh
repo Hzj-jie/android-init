@@ -24,7 +24,19 @@ echo in signal-strengths.sh
 #   fi
 # fi
 
-if [ "SIGNAL_STRENGTH" -le 0 ]
+PREFER_WIFI=0
+if [ "$SIGNAL_STRENGTH" -le 0 ]
+then
+  PREFER_WIFI=1
+else
+  sh ./connected-to-tmobile-2g.sh
+  if [ $? -eq 1 ]
+  then
+    PREFER_WIFI=1
+  fi
+fi
+
+if [ "$PREFER_WIFI" -eq 1 ]
 then
   sh ./enable-2g.sh
   if [ "$WIFI_ON" == "false" ]
