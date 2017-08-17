@@ -164,6 +164,9 @@ public final class Executor
             builder.environment().put(
                 "CARRIER",
                 Receiver.Status.carrier());
+            builder.environment().put(
+                "PREFERRED_NETWORK_TYPE",
+                String.valueOf(Receiver.Status.preferredNetworkType()));
             p = builder.start();
         }
         catch (Exception ex)

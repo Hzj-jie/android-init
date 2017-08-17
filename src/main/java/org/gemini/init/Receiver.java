@@ -14,6 +14,7 @@ import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import java.lang.reflect.Method;
 
 public class Receiver extends BroadcastReceiver
 {
@@ -64,6 +65,11 @@ public class Receiver extends BroadcastReceiver
             return carrier;
         }
 
+        public static int preferredNetworkType()
+        {
+            return preferredNetworkType;
+        }
+
         protected static boolean wifiIsOn = false;
         protected static boolean wifiIsConnected = false;
         protected static int signalStrength = 0;
@@ -73,6 +79,7 @@ public class Receiver extends BroadcastReceiver
         protected static String lastSsid = "";
         protected static String lastActiveSsid = "";
         protected static String carrier = "";
+        protected static int preferredNetworkType = 0;
 
         private static class Settable extends Status
         {
@@ -118,6 +125,11 @@ public class Receiver extends BroadcastReceiver
             {
                 carrier = v;
             }
+
+            public static void setPreferredNetworkType(int v)
+            {
+                preferredNetworkType = v;
+            }
         }
     }
 
@@ -135,6 +147,8 @@ public class Receiver extends BroadcastReceiver
 
     private static void broadcastSignalStrength(final Context context,
                                                 final int level) {
+        retrieveCarrier(context);
+        retrievePreferredNetworkType(context);
         instance.writeLine(context, ">>>> Received signal level " + level);
         if (Status.signalStrength() != level) {
             Status.Settable.setSignalStrength(level);
@@ -145,8 +159,6 @@ public class Receiver extends BroadcastReceiver
             intent.putExtra(SIGNAL_STRENGTHS_EXTRA, level);
             context.startService(intent);
         }
-
-        retrieveCarrier(context);
     }
 
     private static int asuToLevel(int asu) {
@@ -170,6 +182,7 @@ public class Receiver extends BroadcastReceiver
     @TargetApi(7)
     private static void registerTelephony(final Context context) {
         retrieveCarrier(context);
+        retrievePreferredNetworkType(context);
         TelephonyManager manager = (TelephonyManager)
             context.getSystemService(Context.TELEPHONY_SERVICE);
         phoneStateListener = new PhoneStateListener() {
@@ -225,7 +238,6 @@ public class Receiver extends BroadcastReceiver
                         }
                     }
                 }
-                retrieveCarrier(context);
                 super.onSignalStrengthsChanged(signalStrength);
             }
 
@@ -279,6 +291,113 @@ public class Receiver extends BroadcastReceiver
         TelephonyManager manager = (TelephonyManager)context.getSystemService(
             Context.TELEPHONY_SERVICE);
         Status.Settable.setCarrier(manager.getNetworkOperatorName());
+    }
+
+    private static int getSubId(final Context context)
+    {
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(
+            Context.TELEPHONY_SERVICE);
+        Method method = null;
+        try
+        {
+            method = TelephonyManager.class.getDeclaredMethod("getSubId");
+            return (Integer)method.invoke(manager);
+        }
+        catch (Exception ex)
+        {
+            instance.writeLine(context,
+                               "Failed to get getSubId: " +
+                               ex.toString());
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    private static boolean retrievePreferredNetworkType1(final Context context)
+    {
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(
+            Context.TELEPHONY_SERVICE);
+        Method method = null;
+        try
+        {
+            method = TelephonyManager.class.getMethod(
+                "getPreferredNetworkType", int.class);
+        }
+        catch (Exception ex)
+        {
+            instance.writeLine(context,
+                               "Failed to get getPreferredNetworkType 1: " +
+                               ex.toString());
+            return false;
+        }
+        if (method == null) return false;
+        method.setAccessible(true);
+
+        try
+        {
+            Status.Settable.setPreferredNetworkType(
+                (Integer)method.invoke(manager, getSubId(context)));
+        }
+        catch (java.lang.reflect.InvocationTargetException ex)
+        {
+            instance.writeLine(context,
+                               "Failed to retrieve preferred network type 1: " +
+                               ex.toString() +
+                               ", target ex " +
+                               ex.getTargetException().toString());
+            return false;
+        }
+        catch (Exception ex)
+        {
+            instance.writeLine(context,
+                               "Failed to retrieve preferred network type 1: " +
+                               ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean retrievePreferredNetworkType2(final Context context)
+    {
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(
+            Context.TELEPHONY_SERVICE);
+        Method method = null;
+        try
+        {
+            method = TelephonyManager.class.getMethod(
+                "getPreferredNetworkType");
+        }
+        catch (Exception ex)
+        {
+            instance.writeLine(context,
+                               "Failed to get getPreferredNetworkType 2: " +
+                               ex.toString());
+            return false;
+        }
+        if (method == null) return false;
+        method.setAccessible(true);
+
+        try
+        {
+            Status.Settable.setPreferredNetworkType(
+                (Integer)method.invoke(manager));
+        }
+        catch (Exception ex)
+        {
+            instance.writeLine(context,
+                               "Failed to retrieve preferred network type 2: " +
+                               ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    private static void retrievePreferredNetworkType(final Context context)
+    {
+        if (!retrievePreferredNetworkType1(context) &&
+            !retrievePreferredNetworkType2(context))
+        {
+            Status.Settable.setPreferredNetworkType(-1);
+        }
     }
 
     private static void retrieveWifiStatus(final Context context)

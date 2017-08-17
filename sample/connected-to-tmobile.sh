@@ -8,6 +8,7 @@ then
 else
   sh ./connected-to-tmobile-3g.sh
   if [ $? -eq 1 ]
+  then
     exit 1
   fi
 fi

@@ -2,8 +2,7 @@
 
 # return 1 if current preferred network mode is 2g
 
-settings get global preferred_network_mode | grep 1 >/dev/null 2>&1
-if [ $? -eq 0 ]
+if [ "$PREFERRED_NETWORK_TYPE" -eq "1" ]
 then
   exit 1
 else
