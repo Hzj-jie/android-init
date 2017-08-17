@@ -29,10 +29,14 @@ if [ "$SIGNAL_STRENGTH" -le 0 ]
 then
   PREFER_WIFI=1
 else
-  sh ./connected-to-2g.sh
-  if [ $? -eq 1 ]
+  sh ./prefer-2g.sh
+  if [ $? -eq 0 ]
   then
-    PREFER_WIFI=1
+    sh ./connected-to-2g.sh
+    if [ $? -eq 1 ]
+    then
+      PREFER_WIFI=1
+    fi
   fi
 fi
 
