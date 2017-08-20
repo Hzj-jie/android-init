@@ -24,6 +24,11 @@ echo in signal-strengths.sh
 #   fi
 # fi
 
+if [ "$USER_PRESENT" == "true" ]
+then
+  exit 0
+fi
+
 PREFER_WIFI=0
 if [ "$SIGNAL_STRENGTH" -le 0 ]
 then
@@ -57,9 +62,9 @@ then
     fi
   fi
 else
-  if [ "$USER_PRESENT" == "false" ]
+  sh ./choose-2g-3g-4g.sh
+  if [ $? -eq 0 ]
   then
-    sh ./choose-3g-4g.sh
     sh ./turn-off-wifi.sh
   fi
 fi

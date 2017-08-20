@@ -22,5 +22,7 @@ else
 #      sh ./choose-3g-4g.sh
 #    fi
 #  fi
+  # Ensures signal-strengths takes effect.
+  USER_PRESENT=false
   sh ./signal-strengths.sh
 fi
