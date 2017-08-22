@@ -30,17 +30,23 @@ then
 fi
 
 PREFER_WIFI=0
-if [ "$SIGNAL_STRENGTH" -le 0 ]
+sh ./connected-to-google-wifi.sh
+if [ $? -eq 1 ]
 then
   PREFER_WIFI=1
 else
-  sh ./prefer-2g.sh
-  if [ $? -eq 0 ]
+  if [ "$SIGNAL_STRENGTH" -le 0 ]
   then
-    sh ./connected-to-2g.sh
-    if [ $? -eq 1 ]
+    PREFER_WIFI=1
+  else
+    sh ./prefer-2g.sh
+    if [ $? -eq 0 ]
     then
-      PREFER_WIFI=1
+      sh ./connected-to-2g.sh
+      if [ $? -eq 1 ]
+      then
+        PREFER_WIFI=1
+      fi
     fi
   fi
 fi
