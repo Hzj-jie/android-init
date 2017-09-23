@@ -53,6 +53,15 @@ fi
 
 if [ "$PREFER_WIFI" -eq 1 ]
 then
+  if [ "$WIFI_ON" == "false" ]
+  then
+    sh ./turn-on-wifi.sh
+  fi
+fi
+
+: '
+if [ "$PREFER_WIFI" -eq 1 ]
+then
   sh ./prefer-2g.sh
   if [ $? -eq 0 ]
   then
@@ -74,3 +83,4 @@ else
     sh ./turn-off-wifi.sh
   fi
 fi
+'
