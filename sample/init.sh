@@ -12,8 +12,11 @@ sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
 # sh "./move.sh" &
 # sh "./logger.sh"
 
-cp /system/etc/hosts $SDCARD/backup/
-cp /system/build.prop $SDCARD/backup/emui4.0/build.prop.changed
+if [ "$HOSTNAME" = "hwPE" ]
+then
+    cp /system/etc/hosts $SDCARD/backup/
+    cp /system/build.prop $SDCARD/backup/emui4.0/build.prop.changed
+fi
 
 # sh "./power-watch.sh" &
 

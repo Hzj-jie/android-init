@@ -10,7 +10,11 @@ then
   sh ./auto-ringer.sh &
   sh ./media-scanner.sh &
 fi
-sh ./move.sh &
+
+if [ "$HOSTNAME" = "HWVTR" ]
+then
+  sh ./move.sh &
+fi
 
 # 1200 is the maximum reliable seconds we can sleep, otherwise the delay may
 # be too significant.

@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+import android.util.Log;
+
 public final class Executor
 {
     private final Context context;
@@ -57,19 +60,51 @@ public final class Executor
         }
     }
 
-    private static final String internalStorageDirectory()
+    private final String internalStorageDirectory()
     {
         String p = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        {
+            if (Environment.isExternalStorageEmulated())
+                return p;
+        }
         String e = System.getenv("EXTERNAL_STORAGE");
-        if (p.equals(externalStorageDirectory()) && e != null)
+        if (e != null)
             return e;
-        else
-            return p;
+        return p;
     }
 
-    private static final String externalStorageDirectory()
+    private final String externalStorageDirectory()
     {
-        return System.getenv("SECONDARY_STORAGE");
+        String e = System.getenv("SECONDARY_STORAGE");
+        if (e != null) return e;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            File[] candidates = context.getExternalFilesDirs(null);
+            for (File f : candidates)
+            {
+                String path = f.getAbsolutePath();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    if (Environment.isExternalStorageEmulated(f))
+                        continue;
+                }
+                else
+                {
+                    // We can only guess.
+                    if (path.indexOf("/emulated/") != -1)
+                        continue;
+                }
+                int endIndex = path.indexOf("/Android/data");
+                if (endIndex == -1)
+                    continue;
+
+                // Include the last '/'.
+                return path.substring(0, endIndex + 1);
+            }
+        }
+        return "";
     }
 
     private final File internalInitDirectory()

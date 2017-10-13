@@ -21,10 +21,11 @@ do
             rm "$SDCARD/Pictures/WeChat/do.not.delete" 1>/dev/null 2>&1
         fi
     done
-done
 
-mv "$SDCARD/HDWallPaper/bigImage/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
-mv "$SDCARD/Pictures/OGQ/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
+    mv "$i/HDWallPaper/bigImage/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
+    mv "$i/Pictures/OGQ/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
+    mv "$i/Android/data/com.dv.adm/files/"* "$SDCARD/Download/" 1>/dev/null 2>&1
+done
 
 if [ "$INTERNAL" != "$SDCARD" ]
 then
@@ -32,5 +33,3 @@ then
     mv "$INTERNAL/Pictures/Screenshots/"* "$SDCARD/Pictures/Screenshots/" 1>/dev/null 2>&1
 fi
 sh "./copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/" 1>/dev/null 2>&1
-
-mv "$SDCARD/Android/data/com.dv.adm/files/"* "$SDCARD/Download/" 1>/dev/null 2>&1
