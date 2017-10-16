@@ -7,5 +7,8 @@ sh "./change-wallpaper.sh" &
 sh "./auto-ringer.sh" &
 # sh "./enable-2g.sh" &
 sh "./signal-strengths.sh" &
-# sh "./turn-off-wifi.sh" &
-sh "./clear-assistant.sh" &
+
+if [ "$HOSTNAME" == "hwPE" ]
+then
+  sh "./clear-assistant.sh" &
+fi

@@ -29,6 +29,12 @@ then
   exit 0
 fi
 
+if [ "$HOSTNAME" != "hwPE" ]
+then
+  sh ./turn-on-off-wifi-based-on-network-state.sh
+  exit 0
+fi
+
 PREFER_WIFI=0
 sh ./connected-to-google-wifi.sh
 if [ $? -eq 1 ]

@@ -2,12 +2,18 @@
 
 echo in screen-on.sh
 
-sh ./set-assistant.sh
+if [ "$HOSTNAME" == "hwPE" ]
+then
+  sh ./set-assistant.sh
+fi
+
+sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
 
 if [ "$WIFI_CONNECT" == "true" ]
 then
   exit 0
-else
+fi
+
 #  if [ "$WIFI_ON" == "true" ]
 #  then
 #    # No WIFI
@@ -22,7 +28,7 @@ else
 #      sh ./choose-3g-4g.sh
 #    fi
 #  fi
-  # Ensures signal-strengths takes effect.
-  USER_PRESENT=false
-  sh ./signal-strengths.sh
-fi
+
+# Ensures signal-strengths takes effect.
+USER_PRESENT=false
+sh ./signal-strengths.sh

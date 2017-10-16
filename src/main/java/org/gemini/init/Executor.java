@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-import android.util.Log;
-
 public final class Executor
 {
     private final Context context;
