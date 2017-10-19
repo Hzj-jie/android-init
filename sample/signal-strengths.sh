@@ -31,7 +31,7 @@ fi
 
 if [ "$HOSTNAME" != "hwPE" ]
 then
-  sh ./turn-on-off-wifi-based-on-network-state.sh
+# sh ./turn-on-off-wifi-based-on-network-state.sh
   exit 0
 fi
 
