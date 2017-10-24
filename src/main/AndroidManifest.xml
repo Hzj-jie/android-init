@@ -68,5 +68,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".GrantSDCardPermissionActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:label="Grant SD Card Permission"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name=".GrantSDCardPermissionActivity" />
+                <action android:name="android.intent.action.MAIN" /> 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
