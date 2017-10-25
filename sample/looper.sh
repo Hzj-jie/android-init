@@ -11,7 +11,7 @@ then
   sh ./media-scanner.sh &
 fi
 
-if [ "$HOSTNAME" = "HWVTR" ]
+if [ "$MODEL" = "VTR-L29" ]
 then
   sh ./move.sh &
 fi

@@ -2,7 +2,7 @@
 
 echo in screen-on.sh
 
-if [ "$HOSTNAME" == "hwPE" ]
+if [ "$MODEL" == "PE-TL10" ]
 then
   sh ./set-assistant.sh
 fi

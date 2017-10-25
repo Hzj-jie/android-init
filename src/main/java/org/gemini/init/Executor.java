@@ -59,12 +59,39 @@ public final class Executor
 
     private final String internalStorageDirectory()
     {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            File[] candidates = context.getExternalFilesDirs(null);
+            for (File f : candidates)
+            {
+                String path = f.getAbsolutePath();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    if (!Environment.isExternalStorageEmulated(f))
+                        continue;
+                }
+                else
+                {
+                    // We can only guess.
+                    if (path.indexOf("/emulated/") == -1)
+                        continue;
+                }
+                int endIndex = path.indexOf("/Android/data");
+                if (endIndex == -1)
+                    continue;
+
+                // Include the last '/'.
+                return path.substring(0, endIndex + 1);
+            }
+        }
+
         String p = Environment.getExternalStorageDirectory().getAbsolutePath();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
         {
             if (Environment.isExternalStorageEmulated())
                 return p;
         }
+
         String e = System.getenv("EXTERNAL_STORAGE");
         if (e != null)
             return e;
@@ -199,6 +226,9 @@ public final class Executor
             builder.environment().put(
                 "PREFERRED_NETWORK_TYPE",
                 String.valueOf(Receiver.Status.preferredNetworkType()));
+            builder.environment().put(
+                "MODEL",
+                Build.MODEL);
             p = builder.start();
         }
         catch (Exception ex)

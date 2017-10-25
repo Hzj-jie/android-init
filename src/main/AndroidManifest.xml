@@ -69,6 +69,7 @@
             </intent-filter>
         </activity>
 
+        <!--
         <activity android:name=".GrantSDCardPermissionActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:label="Grant SD Card Permission"
@@ -82,5 +83,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
     </application>
 </manifest>

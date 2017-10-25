@@ -29,7 +29,7 @@ then
   exit 0
 fi
 
-if [ "$HOSTNAME" != "hwPE" ]
+if [ "$MODEL" != "PE-TL10" ]
 then
 # sh ./turn-on-off-wifi-based-on-network-state.sh
   exit 0

@@ -12,7 +12,7 @@ sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
 # sh "./move.sh" &
 # sh "./logger.sh"
 
-if [ "$HOSTNAME" = "hwPE" ]
+if [ "$MODEL" = "PE-TL10" ]
 then
     cp /system/etc/hosts $SDCARD/backup/
     cp /system/build.prop $SDCARD/backup/emui4.0/build.prop.changed
