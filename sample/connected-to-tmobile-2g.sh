@@ -4,7 +4,8 @@
 
 if [ "$CARRIER" == "T-Mobile" ]
 then
-  exit 1
+  # exit 1 # 4g is also called T-Mobile.
+  exit 0
 else
   exit 0
 fi
