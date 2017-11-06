@@ -198,34 +198,34 @@ public final class Executor
                 "OUTPUT_DIR", logger.outDir.getAbsolutePath());
             builder.environment().put(
                 "WIFI_ON",
-                String.valueOf(Receiver.Status.wifiIsOn()));
+                String.valueOf(Status.wifiIsOn()));
             builder.environment().put(
                 "WIFI_CONNECT",
-                String.valueOf(Receiver.Status.wifiIsConnected()));
+                String.valueOf(Status.wifiIsConnected()));
             builder.environment().put(
                 "SIGNAL_STRENGTH",
-                String.valueOf(Receiver.Status.signalStrength()));
+                String.valueOf(Status.signalStrength()));
             builder.environment().put(
                 "SCREEN_ON",
-                String.valueOf(Receiver.Status.screenIsOn()));
+                String.valueOf(Status.screenIsOn()));
             builder.environment().put(
                 "USER_PRESENT",
-                String.valueOf(Receiver.Status.userIsPresenting()));
+                String.valueOf(Status.userIsPresenting()));
             builder.environment().put(
                 "WIFI_SSID",
-                Receiver.Status.ssid());
+                Status.ssid());
             builder.environment().put(
                 "WIFI_LAST_SSID",
-                Receiver.Status.lastSsid());
+                Status.lastSsid());
             builder.environment().put(
                 "WIFI_LAST_ACTIVE_SSID",
-                Receiver.Status.lastActiveSsid());
+                Status.lastActiveSsid());
             builder.environment().put(
                 "CARRIER",
-                Receiver.Status.carrier());
+                Status.carrier());
             builder.environment().put(
                 "PREFERRED_NETWORK_TYPE",
-                String.valueOf(Receiver.Status.preferredNetworkType()));
+                String.valueOf(Status.preferredNetworkType()));
             builder.environment().put(
                 "MODEL",
                 Build.MODEL);
