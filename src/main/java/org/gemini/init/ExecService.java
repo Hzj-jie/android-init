@@ -64,20 +64,20 @@ public final class ExecService extends KeepAliveService
 
   private static final int defaultSwitch = 0;
   private static final int defaultLooperSwitch = 10;
+  private Logger logger;
 
-  private final Logger logger;
-
-  public ExecService() {
-    super();
+  @Override
+  public void onCreate() {
+    super.onCreate();
     Receiver.register(this);
     logger = new Logger(this, "service.log");
   }
 
   @Override
-  protected void finalize() throws Throwable {
+  public void onDestroy() {
     Receiver.unregister(this);
     logger.close();
-    super.finalize();
+    super.onDestroy();
   }
 
   private void exec(int switchId, final Bundle bundle) {
@@ -108,13 +108,13 @@ public final class ExecService extends KeepAliveService
   @Override
   protected void onStart() {
     startService(new Intent(switches[defaultSwitch].action,
-                 Uri.EMPTY,
-                 this,
-                 ExecService.class));
+                            Uri.EMPTY,
+                            this,
+                            ExecService.class));
     startService(new Intent(switches[defaultLooperSwitch].action,
-                 Uri.EMPTY,
-                 this,
-                 ExecService.class));
+                            Uri.EMPTY,
+                            this,
+                            ExecService.class));
   }
 
   @Override

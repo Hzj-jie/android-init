@@ -13,6 +13,8 @@ import org.gemini.shared.Event;
 import org.gemini.shared.TelephonyState;
 import org.gemini.shared.PhonySignalStrengthListener;
 
+import android.util.Log;
+
 public class Receiver extends BroadcastReceiver {
   private static class Settable extends Status {
     public static void setWifiIsOn(boolean v) {

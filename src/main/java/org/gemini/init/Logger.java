@@ -10,8 +10,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.util.Date;
+import org.gemini.shared.Debugging;
 
 public final class Logger
 {
@@ -46,9 +45,8 @@ public final class Logger
         this.writer = writer;
     }
 
-    public static final String currentTime()
-    {
-        return DateFormat.getDateTimeInstance().format(new Date());
+    public static final String currentTime() {
+      return Debugging.currentTime();
     }
 
     private static final boolean externalStorageWritable()
