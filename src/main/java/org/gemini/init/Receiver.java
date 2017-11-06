@@ -10,49 +10,62 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import org.gemini.shared.Event;
+import org.gemini.shared.Objects;
 import org.gemini.shared.TelephonyState;
 import org.gemini.shared.PhonySignalStrengthListener;
 
-import android.util.Log;
-
 public class Receiver extends BroadcastReceiver {
   private static class Settable extends Status {
-    public static void setWifiIsOn(boolean v) {
+    public static boolean setWifiIsOn(boolean v) {
+      if (wifiIsOn == v) return false;
       wifiIsOn = v;
+      return true;
     }
 
-    public static void setWifiIsConnected(boolean v) {
+    public static boolean setWifiIsConnected(boolean v) {
+      if (wifiIsConnected == v) return false;
       wifiIsConnected = v;
+      return true;
     }
 
-    public static void setSignalStrength(int v) {
+    public static boolean setSignalStrength(int v) {
+      if (signalStrength == v) return false;
       signalStrength = v;
+      return true;
     }
 
-    public static void setScreenIsOn(boolean v) {
+    public static boolean setScreenIsOn(boolean v) {
+      if (screenIsOn == v) return false;
       screenIsOn = v;
+      return true;
     }
 
-    public static void setUserIsPresenting(boolean v) {
+    public static boolean setUserIsPresenting(boolean v) {
+      if (userIsPresenting == v) return false;
       userIsPresenting = v;
+      return true;
     }
 
-    public static void setSsid(String v) {
-      if (ssid != v) {
-        if (ssid.length() > 0) {
-          lastActiveSsid = ssid;
-        }
-        lastSsid = ssid;
-        ssid = v;
+    public static boolean setSsid(String v) {
+      if (Objects.equals(ssid, v)) return false;
+      if (ssid.length() > 0) {
+        lastActiveSsid = ssid;
       }
+      lastSsid = ssid;
+      ssid = v;
+      return true;
     }
 
-    public static void setCarrier(String v) {
+    public static boolean setCarrier(String v) {
+      if (Objects.equals(carrier, v)) return false;
       carrier = v;
+      return true;
     }
 
-    public static void setPreferredNetworkType(int v) {
+    public static boolean setPreferredNetworkType(int v) {
+      if (preferredNetworkType == v) return false;
       preferredNetworkType = v;
+      return true;
     }
   }
 
@@ -96,6 +109,7 @@ public class Receiver extends BroadcastReceiver {
   }
 
   public static void register(Context context) {
+    context = context.getApplicationContext();
     instance.initialize(context);
     registerScreen(context);
 
@@ -105,6 +119,7 @@ public class Receiver extends BroadcastReceiver {
   }
 
   public static void unregister(Context context) {
+    context = context.getApplicationContext();
     try {
       context.unregisterReceiver(instance);
     }
@@ -119,8 +134,7 @@ public class Receiver extends BroadcastReceiver {
     if (level >= PhonySignalStrengthListener.MIN_LEVEL &&
         level <= PhonySignalStrengthListener.MAX_LEVEL) {
       instance.logger.writeLine(">>>> Received signal level " + level);
-      if (Status.signalStrength() != level) {
-        Settable.setSignalStrength(level);
+      if (Settable.setSignalStrength(level)) {
         Intent intent = new Intent(SIGNAL_STRENGTHS,
                                    Uri.EMPTY,
                                    context,
@@ -135,18 +149,20 @@ public class Receiver extends BroadcastReceiver {
     WifiManager wifi = (WifiManager)
       context.getSystemService(Context.WIFI_SERVICE);
     if (wifi.isWifiEnabled()) {
-      Settable.setWifiIsOn(true);
-      context.startService(new Intent(WIFI_ON,
-                                      Uri.EMPTY,
-                                      context,
-                                      ExecService.class));
+      if (Settable.setWifiIsOn(true)) {
+        context.startService(new Intent(WIFI_ON,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
     }
     else {
-      Settable.setWifiIsOn(false);
-      context.startService(new Intent(WIFI_OFF,
-                                      Uri.EMPTY,
-                                      context,
-                                      ExecService.class));
+      if (Settable.setWifiIsOn(false)) {
+        context.startService(new Intent(WIFI_OFF,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
     }
     WifiInfo wifiInfo = wifi.getConnectionInfo();
     if (wifiInfo != null) {
@@ -160,18 +176,20 @@ public class Receiver extends BroadcastReceiver {
     NetworkInfo netInfo = conMan.getActiveNetworkInfo();
     if (netInfo != null &&
         netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-      Settable.setWifiIsConnected(true);
-      context.startService(new Intent(WIFI_CONN,
-                                      Uri.EMPTY,
-                                      context,
-                                      ExecService.class));
+      if (Settable.setWifiIsConnected(true)) {
+        context.startService(new Intent(WIFI_CONN,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
     }
     else {
-      Settable.setWifiIsConnected(false);
-      context.startService(new Intent(WIFI_DISCONN,
-                                      Uri.EMPTY,
-                                      context,
-                                      ExecService.class));
+      if (Settable.setWifiIsConnected(false)) {
+        context.startService(new Intent(WIFI_DISCONN,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
     }
   }
 
