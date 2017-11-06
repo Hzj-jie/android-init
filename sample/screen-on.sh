@@ -7,7 +7,7 @@ then
   sh ./set-assistant.sh
 fi
 
-sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
+# sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
 
 if [ "$WIFI_CONNECT" == "true" ]
 then

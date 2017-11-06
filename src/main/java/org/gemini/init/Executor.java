@@ -13,6 +13,7 @@ import java.lang.ProcessBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.gemini.shared.Storage;
 
 public final class Executor
 {
@@ -20,6 +21,7 @@ public final class Executor
     private final String initFolder;
     private final String filename;
     private final Map<String, String> envs;
+    private final Storage storage;
 
     public Executor(Context context,
                     String initFolder,
@@ -30,6 +32,7 @@ public final class Executor
         this.initFolder = initFolder;
         this.filename = filename;
         this.envs = envs;
+        this.storage = new Storage(context);
     }
 
     public Executor(Context context, String filename, Map<String, String> envs)
@@ -57,78 +60,12 @@ public final class Executor
         }
     }
 
-    private final String internalStorageDirectory()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
-            File[] candidates = context.getExternalFilesDirs(null);
-            for (File f : candidates)
-            {
-                String path = f.getAbsolutePath();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    if (!Environment.isExternalStorageEmulated(f))
-                        continue;
-                }
-                else
-                {
-                    // We can only guess.
-                    if (path.indexOf("/emulated/") == -1)
-                        continue;
-                }
-                int endIndex = path.indexOf("/Android/data");
-                if (endIndex == -1)
-                    continue;
-
-                // Include the last '/'.
-                return path.substring(0, endIndex + 1);
-            }
-        }
-
-        String p = Environment.getExternalStorageDirectory().getAbsolutePath();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        {
-            if (Environment.isExternalStorageEmulated())
-                return p;
-        }
-
-        String e = System.getenv("EXTERNAL_STORAGE");
-        if (e != null)
-            return e;
-        return p;
+    private final String internalStorageDirectory() {
+      return storage.buildInSharedStoragePath();
     }
 
-    private final String externalStorageDirectory()
-    {
-        String e = System.getenv("SECONDARY_STORAGE");
-        if (e != null) return e;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
-            File[] candidates = context.getExternalFilesDirs(null);
-            for (File f : candidates)
-            {
-                String path = f.getAbsolutePath();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    if (Environment.isExternalStorageEmulated(f))
-                        continue;
-                }
-                else
-                {
-                    // We can only guess.
-                    if (path.indexOf("/emulated/") != -1)
-                        continue;
-                }
-                int endIndex = path.indexOf("/Android/data");
-                if (endIndex == -1)
-                    continue;
-
-                // Include the last '/'.
-                return path.substring(0, endIndex + 1);
-            }
-        }
-        return "";
+    private final String externalStorageDirectory() {
+      return storage.externalSharedStoragePath();
     }
 
     private final File internalInitDirectory()
@@ -198,34 +135,34 @@ public final class Executor
                 "OUTPUT_DIR", logger.outDir.getAbsolutePath());
             builder.environment().put(
                 "WIFI_ON",
-                String.valueOf(Receiver.Status.wifiIsOn()));
+                String.valueOf(Status.wifiIsOn()));
             builder.environment().put(
                 "WIFI_CONNECT",
-                String.valueOf(Receiver.Status.wifiIsConnected()));
+                String.valueOf(Status.wifiIsConnected()));
             builder.environment().put(
                 "SIGNAL_STRENGTH",
-                String.valueOf(Receiver.Status.signalStrength()));
+                String.valueOf(Status.signalStrength()));
             builder.environment().put(
                 "SCREEN_ON",
-                String.valueOf(Receiver.Status.screenIsOn()));
+                String.valueOf(Status.screenIsOn()));
             builder.environment().put(
                 "USER_PRESENT",
-                String.valueOf(Receiver.Status.userIsPresenting()));
+                String.valueOf(Status.userIsPresenting()));
             builder.environment().put(
                 "WIFI_SSID",
-                Receiver.Status.ssid());
+                Status.ssid());
             builder.environment().put(
                 "WIFI_LAST_SSID",
-                Receiver.Status.lastSsid());
+                Status.lastSsid());
             builder.environment().put(
                 "WIFI_LAST_ACTIVE_SSID",
-                Receiver.Status.lastActiveSsid());
+                Status.lastActiveSsid());
             builder.environment().put(
                 "CARRIER",
-                Receiver.Status.carrier());
+                Status.carrier());
             builder.environment().put(
                 "PREFERRED_NETWORK_TYPE",
-                String.valueOf(Receiver.Status.preferredNetworkType()));
+                String.valueOf(Status.preferredNetworkType()));
             builder.environment().put(
                 "MODEL",
                 Build.MODEL);
