@@ -67,16 +67,26 @@ public class Receiver extends BroadcastReceiver {
       preferredNetworkType = v;
       return true;
     }
+
+    public static boolean setMobileDataIsConnected(boolean v) {
+      if (mobileDataIsConnected == v) return false;
+      mobileDataIsConnected = v;
+      return true;
+    }
   }
 
   public static final String WIFI_ON = "org.gemini.init.intent.WIFI_ON";
   public static final String WIFI_OFF = "org.gemini.init.initent.WIFI_OFF";
   public static final String WIFI_CONN = "org.gemini.init.intent.WIFI_CONN";
   public static final String WIFI_DISCONN =
-    "org.gemini.init.intent.WIFI_DISCONN";
+      "org.gemini.init.intent.WIFI_DISCONN";
   public static final String SIGNAL_STRENGTHS =
-    "org.gemini.init.intent.SIGNAL_STRENGTHS";
+      "org.gemini.init.intent.SIGNAL_STRENGTHS";
   public static final String SIGNAL_STRENGTHS_EXTRA = "LEVEL";
+  public static final String MOBILE_DATA_CONN =
+      "org.gemini.init.intent.MOBILE_DATA_CONN";
+  public static final String MOBILE_DATA_DISCONN =
+      "org.gemini.init.intent.MOBILE_DATA_DISCONN";
   private static final Receiver instance = new Receiver();
   private Logger logger;
   private TelephonyState telephonyState;
@@ -115,7 +125,7 @@ public class Receiver extends BroadcastReceiver {
 
     // Initialize Settable.
     broadcastSignalStrength(context, PhonySignalStrengthListener.MIN_LEVEL - 1);
-    retrieveWifiStatus(context);
+    retrieveConnectionStatus(context);
   }
 
   public static void unregister(Context context) {
@@ -145,7 +155,7 @@ public class Receiver extends BroadcastReceiver {
     }
   }
 
-  private static void retrieveWifiStatus(Context context) {
+  private static void retrieveConnectionStatus(Context context) {
     WifiManager wifi = (WifiManager)
       context.getSystemService(Context.WIFI_SERVICE);
     if (wifi.isWifiEnabled()) {
@@ -191,6 +201,23 @@ public class Receiver extends BroadcastReceiver {
                                         ExecService.class));
       }
     }
+    if (netInfo != null &&
+        netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+      if (Settable.setMobileDataIsConnected(true)) {
+        context.startService(new Intent(MOBILE_DATA_CONN,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
+    }
+    else {
+      if (Settable.setMobileDataIsConnected(false)) {
+        context.startService(new Intent(MOBILE_DATA_DISCONN,
+                                        Uri.EMPTY,
+                                        context,
+                                        ExecService.class));
+      }
+    }
   }
 
   @Override
@@ -225,9 +252,16 @@ public class Receiver extends BroadcastReceiver {
                                       context,
                                       ExecService.class));
     }
-    else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(
+    else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(
+                 intent.getAction()) ||
+             WifiManager.WIFI_STATE_CHANGED_ACTION.equals(
+                 intent.getAction()) ||
+             ConnectivityManager.CONNECTIVITY_ACTION.equals(
                  intent.getAction())) {
-      retrieveWifiStatus(context);
+      // TODO: Split retrieveConnectionStatus() into retrieveWifiStatus() and
+      // retrieveMobileDataStatus(): retrieving wifi status in
+      // CONNECTIVITY_ACTION is not necessary.
+      retrieveConnectionStatus(context);
     }
   }
 }

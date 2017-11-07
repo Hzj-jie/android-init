@@ -41,6 +41,10 @@ public class Status {
     return preferredNetworkType;
   }
 
+  public static boolean mobileDataIsConnected() {
+    return mobileDataIsConnected;
+  }
+
   protected static boolean wifiIsOn = false;
   protected static boolean wifiIsConnected = false;
   protected static int signalStrength = 0;
@@ -51,4 +55,5 @@ public class Status {
   protected static String lastActiveSsid = "";
   protected static String carrier = "";
   protected static int preferredNetworkType = 0;
+  protected static boolean mobileDataIsConnected = false;
 }

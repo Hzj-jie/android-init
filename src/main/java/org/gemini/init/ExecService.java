@@ -45,6 +45,8 @@ public final class ExecService extends KeepAliveService
     new Switch(Receiver.WIFI_OFF, "wifi-off.sh"),
     new Switch(Receiver.WIFI_CONN, "wifi-connected.sh"),
     new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected.sh"),
+    new Switch(Receiver.MOBILE_DATA_CONN, "mobile-data-connected.sh"),
+    new Switch(Receiver.MOBILE_DATA_DISCONN, "mobile-data-disconnected.sh"),
     new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
     new Switch(ONE_SHOT, "one-shot.sh"),
     new Switch(LOOPER, "looper.sh", true),

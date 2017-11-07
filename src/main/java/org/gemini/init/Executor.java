@@ -140,6 +140,9 @@ public final class Executor
                 "WIFI_CONNECT",
                 String.valueOf(Status.wifiIsConnected()));
             builder.environment().put(
+                "MOBILE_DATA_CONNECT",
+                String.valueOf(Status.mobileDataIsConnected()));
+            builder.environment().put(
                 "SIGNAL_STRENGTH",
                 String.valueOf(Status.signalStrength()));
             builder.environment().put(
