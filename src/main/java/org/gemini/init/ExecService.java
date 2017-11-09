@@ -73,6 +73,14 @@ public final class ExecService extends KeepAliveService
     super.onCreate();
     Receiver.register(this);
     logger = new Logger(this, "service.log");
+    startService(new Intent(switches[defaultSwitch].action,
+                            Uri.EMPTY,
+                            this,
+                            ExecService.class));
+    startService(new Intent(switches[defaultLooperSwitch].action,
+                            Uri.EMPTY,
+                            this,
+                            ExecService.class));
   }
 
   @Override
@@ -105,18 +113,6 @@ public final class ExecService extends KeepAliveService
         }
       }.start();
     }
-  }
-
-  @Override
-  protected void onStart() {
-    startService(new Intent(switches[defaultSwitch].action,
-                            Uri.EMPTY,
-                            this,
-                            ExecService.class));
-    startService(new Intent(switches[defaultLooperSwitch].action,
-                            Uri.EMPTY,
-                            this,
-                            ExecService.class));
   }
 
   @Override
