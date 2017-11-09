@@ -223,11 +223,6 @@ public class Receiver extends BroadcastReceiver {
     }
 
     initialize(context);
-
-    logger.writeLine(">>>> Received action " + intent.getAction());
-    if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) ||
-        "android.intent.action.QUICKBOOT_POWERON".equals(intent.getAction())) {
-      startService(context, Intent.ACTION_BOOT_COMPLETED);
-    }
+    startService(context, intent.getAction());
   }
 }
