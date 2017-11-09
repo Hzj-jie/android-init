@@ -39,6 +39,7 @@ public final class ExecService extends KeepAliveService
 
   private static final Switch[] switches = {
     new Switch(INIT, "init.sh"),
+    new Switch(LOOPER, "looper.sh", true),
     new Switch(Intent.ACTION_SCREEN_ON, "screen-on.sh"),
     new Switch(Intent.ACTION_SCREEN_OFF, "screen-off.sh"),
     new Switch(Intent.ACTION_USER_PRESENT, "screen-unlock.sh"),
@@ -50,7 +51,6 @@ public final class ExecService extends KeepAliveService
     new Switch(Receiver.MOBILE_DATA_DISCONN, "mobile-data-disconnected.sh"),
     new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
     new Switch(ONE_SHOT, "one-shot.sh"),
-    new Switch(LOOPER, "looper.sh", true),
   };
 
   private static final Map<String, String> parseBundle(Bundle bundle) {
@@ -66,7 +66,7 @@ public final class ExecService extends KeepAliveService
   }
 
   private static final int defaultSwitch = 0;
-  private static final int defaultLooperSwitch = switches.length - 1;
+  private static final int defaultLooperSwitch = 1;
   private Logger logger;
 
   @Override
