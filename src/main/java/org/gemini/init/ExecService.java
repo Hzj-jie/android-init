@@ -14,6 +14,7 @@ import org.gemini.shared.KeepAliveService;
 public final class ExecService extends KeepAliveService
 {
   public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
+  private static final String INIT = "org.gemini.init.intent.INIT";
   private static final String LOOPER = "org.gemini.init.intent.LOOPER";
   private static final String TAG = ExecService.class.getSimpleName();
   private static ExecService instance;
@@ -37,7 +38,7 @@ public final class ExecService extends KeepAliveService
   }
 
   private static final Switch[] switches = {
-    new Switch(Intent.ACTION_BOOT_COMPLETED, "init.sh"),
+    new Switch(INIT, "init.sh"),
     new Switch(Intent.ACTION_SCREEN_ON, "screen-on.sh"),
     new Switch(Intent.ACTION_SCREEN_OFF, "screen-off.sh"),
     new Switch(Intent.ACTION_USER_PRESENT, "screen-unlock.sh"),
@@ -65,7 +66,7 @@ public final class ExecService extends KeepAliveService
   }
 
   private static final int defaultSwitch = 0;
-  private static final int defaultLooperSwitch = 10;
+  private static final int defaultLooperSwitch = switches.length - 1;
   private Logger logger;
 
   @Override
