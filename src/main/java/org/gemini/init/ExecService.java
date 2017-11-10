@@ -117,12 +117,12 @@ public final class ExecService extends KeepAliveService
   }
 
   @Override
-  protected void process(Intent intent, int index) {
+  protected void process(Intent intent) {
     if (intent != null) {
       logger.writeLine(">>>> Received service command " +
-              intent.getAction() +
-              " at " +
-              Logger.currentTime());
+                       intent.getAction() +
+                       " at " +
+                       Logger.currentTime());
       for (int i = 0; i < switches.length; i++) {
         if (switches[i].action.equals(intent.getAction())) {
           exec(i, intent.getExtras());
