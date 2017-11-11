@@ -4,8 +4,8 @@ echo Start init.sh @ `date`
 
 # sleep 120
 
-sh "./start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
-sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
+# sh "./start-activity.sh" "com.tencent.mm" ".ui.LauncherUI"
+# sh "./start-activity.sh" "org.gemini.round_corner" ".RoundCorner"
 # sh "./start-activity.sh" "com.microsoft.skydrive" ".MainActivity"
 # sh "./start-activity.sh" "com.skype.polaris" "com.skype.raider.Main"
 
