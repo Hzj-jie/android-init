@@ -17,7 +17,6 @@ public final class ExecService extends KeepAliveService
   private static final String INIT = "org.gemini.init.intent.INIT";
   private static final String LOOPER = "org.gemini.init.intent.LOOPER";
   private static final String TAG = ExecService.class.getSimpleName();
-  private static ExecService instance;
 
   private static final class Switch {
     public final String action;
