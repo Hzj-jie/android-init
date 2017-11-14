@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import org.gemini.shared.BootCompletedListener;
 import org.gemini.shared.Event;
 import org.gemini.shared.NetworkListener;
 import org.gemini.shared.Objects;
@@ -91,6 +92,7 @@ public class Receiver extends BroadcastReceiver {
   private PhonySignalStrengthListener signalStrengthListener;
   private ScreenListener screenListener;
   private NetworkListener networkListener;
+  private BootCompletedListener bootCompletedListener;
 
   synchronized private void initialize(final Context context) {
     if (logger != null) return;
@@ -166,6 +168,10 @@ public class Receiver extends BroadcastReceiver {
             }
           }
         });
+
+    Preconditions.isNull(bootCompletedListener);
+    bootCompletedListener =
+        new BootCompletedListener(context, ExecService.class);
   }
 
   public static void register(Context context) {
