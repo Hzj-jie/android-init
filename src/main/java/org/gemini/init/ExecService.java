@@ -4,19 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.gemini.shared.Debugging;
 import org.gemini.shared.KeepAliveService;
 
-public final class ExecService extends KeepAliveService
-{
+public final class ExecService extends KeepAliveService {
   public static final String ONE_SHOT = "org.gemini.init.intent.ONE_SHOT";
   private static final String INIT = "org.gemini.init.intent.INIT";
   private static final String LOOPER = "org.gemini.init.intent.LOOPER";
-  private static final String TAG = ExecService.class.getSimpleName();
+  private static final String TAG = Debugging.createTag("Init.ExecService");
 
   private static final class Switch {
     public final String action;
@@ -66,13 +66,11 @@ public final class ExecService extends KeepAliveService
 
   private static final int defaultSwitch = 0;
   private static final int defaultLooperSwitch = 1;
-  private Logger logger;
 
   @Override
   public void onCreate() {
     super.onCreate();
     Receiver.register(this);
-    logger = new Logger(this, "service.log");
     startService(new Intent(switches[defaultSwitch].action,
                             Uri.EMPTY,
                             this,
@@ -86,7 +84,6 @@ public final class ExecService extends KeepAliveService
   @Override
   public void onDestroy() {
     Receiver.unregister(this);
-    logger.close();
     super.onDestroy();
   }
 
@@ -97,8 +94,8 @@ public final class ExecService extends KeepAliveService
     final boolean repeat = switches[switchId].repeat;
     final ExecService me = this;
     if (running.compareAndSet(0, 1)) {
-      logger.writeLine("Going to start " + filename + " for action " +
-               action + " at " + Logger.currentTime());
+      Log.i(TAG, "Going to start " + filename + " for action " + action +
+                 " at " + Debugging.currentTime());
       new Thread() {
         @Override
         public void run() {
@@ -108,8 +105,8 @@ public final class ExecService extends KeepAliveService
           }
           while (r > 0 && repeat);
           if (!running.compareAndSet(1, 0)) assert false;
-          logger.writeLine("Finished " + filename + " for action " +
-                   action + " at " + Logger.currentTime());
+          Log.i(TAG, "Finished " + filename + " for action " + action +
+                     " at " + Debugging.currentTime());
         }
       }.start();
     }
@@ -118,10 +115,8 @@ public final class ExecService extends KeepAliveService
   @Override
   protected void process(Intent intent) {
     if (intent != null) {
-      logger.writeLine(">>>> Received service command " +
-                       intent.getAction() +
-                       " at " +
-                       Logger.currentTime());
+      Log.i(TAG, "Received service command " + intent.getAction() +
+                 " at " + Debugging.currentTime());
       for (int i = 0; i < switches.length; i++) {
         if (switches[i].action.equals(intent.getAction())) {
           exec(i, intent.getExtras());
@@ -129,8 +124,8 @@ public final class ExecService extends KeepAliveService
         }
       }
     } else {
-      logger.writeLine(">>>> Received service command [null] at " +
-              Logger.currentTime());
+      Log.i(TAG, "Received service command [null] at " +
+                 Debugging.currentTime());
     }
   }
 }

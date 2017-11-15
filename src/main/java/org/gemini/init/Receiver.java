@@ -87,7 +87,6 @@ public class Receiver extends BroadcastReceiver {
   public static final String MOBILE_DATA_DISCONN =
       "org.gemini.init.intent.MOBILE_DATA_DISCONN";
   private static final Receiver instance = new Receiver();
-  private Logger logger;
   private TelephonyState telephonyState;
   private PhonySignalStrengthListener signalStrengthListener;
   private ScreenListener screenListener;
@@ -95,10 +94,7 @@ public class Receiver extends BroadcastReceiver {
   private BootCompletedListener bootCompletedListener;
 
   synchronized private void initialize(final Context context) {
-    if (logger != null) return;
-
-    Preconditions.isNull(logger);
-    logger = new Logger(context, "receiver.log");
+    if (telephonyState != null) return;
 
     Preconditions.isNull(telephonyState);
     telephonyState = new TelephonyState(context);
@@ -206,7 +202,6 @@ public class Receiver extends BroadcastReceiver {
         instance.telephonyState.preferredNetworkType());
     if (level >= PhonySignalStrengthListener.MIN_LEVEL &&
         level <= PhonySignalStrengthListener.MAX_LEVEL) {
-      instance.logger.writeLine(">>>> Received signal level " + level);
       if (Settable.setSignalStrength(level)) {
         Intent intent = new Intent(SIGNAL_STRENGTHS,
                                    Uri.EMPTY,
