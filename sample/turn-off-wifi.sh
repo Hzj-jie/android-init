@@ -73,6 +73,11 @@ then
     exit 103
   fi
   '
+
+  if [ "$POWER_CONNECTED" == "true" ]
+  then
+    exit 104
+  fi
 fi
 
 am start --user 0 "org.gemini.wifi_onoff/.WifiOffActivity" &

@@ -45,6 +45,30 @@ public class Status {
     return mobileDataIsConnected;
   }
 
+  public static boolean powerConnected() {
+    return powerConnected;
+  }
+
+  public static int powerLevel() {
+    return powerLevel;
+  }
+
+  public static boolean powerLevelLow() {
+    return powerLevelLow;
+  }
+
+  public static boolean usbCharging() {
+    return usbCharging;
+  }
+
+  public static boolean acCharging() {
+    return acCharging;
+  }
+
+  public static boolean wirelessCharging() {
+    return wirelessCharging;
+  }
+
   protected static boolean wifiIsOn = false;
   protected static boolean wifiIsConnected = false;
   protected static int signalStrength = 0;
@@ -56,4 +80,10 @@ public class Status {
   protected static String carrier = "";
   protected static int preferredNetworkType = 0;
   protected static boolean mobileDataIsConnected = false;
+  protected static boolean powerConnected = false;
+  protected static int powerLevel = 0;
+  protected static boolean powerLevelLow = false;
+  protected static boolean usbCharging = false;
+  protected static boolean acCharging = false;
+  protected static boolean wirelessCharging = false;
 }

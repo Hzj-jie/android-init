@@ -49,6 +49,10 @@ public final class ExecService extends KeepAliveService {
     new Switch(Receiver.MOBILE_DATA_CONN, "mobile-data-connected.sh"),
     new Switch(Receiver.MOBILE_DATA_DISCONN, "mobile-data-disconnected.sh"),
     new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
+    new Switch(Receiver.POWER_CONN, "power-connected.sh"),
+    new Switch(Receiver.POWER_DISCONN, "power-disconnected.sh"),
+    new Switch(Receiver.POWER_LOW, "power-low.sh"),
+    new Switch(Receiver.POWER_OK, "power-ok.sh"),
     new Switch(ONE_SHOT, "one-shot.sh"),
   };
 

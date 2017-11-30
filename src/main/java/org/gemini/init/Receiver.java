@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import org.gemini.shared.BatteryListener;
 import org.gemini.shared.BootCompletedListener;
 import org.gemini.shared.Event;
 import org.gemini.shared.NetworkListener;
@@ -72,6 +73,42 @@ public class Receiver extends BroadcastReceiver {
       mobileDataIsConnected = v;
       return true;
     }
+
+    public static boolean setPowerConnected(boolean v) {
+      if (powerConnected == v) return false;
+      powerConnected = v;
+      return true;
+    }
+
+    public static boolean setPowerLevel(int v) {
+      if (powerLevel == v) return false;
+      powerLevel = v;
+      return true;
+    }
+
+    public static boolean setPowerLevelLow(boolean v) {
+      if (powerLevelLow == v) return false;
+      powerLevelLow = v;
+      return true;
+    }
+
+    public static boolean setUsbCharging(boolean v) {
+      if (usbCharging == v) return false;
+      usbCharging = v;
+      return true;
+    }
+
+    public static boolean setAcCharging(boolean v) {
+      if (acCharging == v) return false;
+      acCharging = v;
+      return true;
+    }
+
+    public static boolean setWirelessCharging(boolean v) {
+      if (wirelessCharging == v) return false;
+      wirelessCharging = v;
+      return true;
+    }
   }
 
   public static final String WIFI_ON = "org.gemini.init.intent.WIFI_ON";
@@ -86,12 +123,21 @@ public class Receiver extends BroadcastReceiver {
       "org.gemini.init.intent.MOBILE_DATA_CONN";
   public static final String MOBILE_DATA_DISCONN =
       "org.gemini.init.intent.MOBILE_DATA_DISCONN";
+  public static final String POWER_CONN =
+      "org.gemini.init.intent.POWER_CONN";
+  public static final String POWER_DISCONN =
+      "org.gemini.init.intent.POWER_DISCONN";
+  public static final String POWER_LOW =
+      "org.gemini.init.intent.POWER_LOW";
+  public static final String POWER_OK =
+      "org.gemini.init.intent.POWER_OK";
   private static final Receiver instance = new Receiver();
   private TelephonyState telephonyState;
   private PhonySignalStrengthListener signalStrengthListener;
   private ScreenListener screenListener;
   private NetworkListener networkListener;
   private BootCompletedListener bootCompletedListener;
+  private BatteryListener batteryListener;
 
   synchronized private void initialize(final Context context) {
     if (telephonyState != null) return;
@@ -168,6 +214,33 @@ public class Receiver extends BroadcastReceiver {
     Preconditions.isNull(bootCompletedListener);
     bootCompletedListener =
         new BootCompletedListener(context, ExecService.class);
+
+    Preconditions.isNull(batteryListener);
+    batteryListener = new BatteryListener(context);
+    batteryListener.onStateChanged().add(
+        new Event.ParameterRunnable<BatteryListener.State>() {
+          @Override
+          public void run(BatteryListener.State state) {
+            Preconditions.isNotNull(state);
+            final boolean triggerPowerConnected =
+                Settable.setPowerConnected(state.powerConnected());
+            final boolean triggerLevelLow =
+                Settable.setPowerLevelLow(state.levelLow());
+            Settable.setPowerLevel(state.level());
+            Settable.setUsbCharging(state.usbCharging());
+            Settable.setAcCharging(state.acCharging());
+            Settable.setWirelessCharging(state.wirelessCharging());
+
+            if (triggerPowerConnected) {
+              startService(context,
+                           state.powerConnected() ? POWER_CONN : POWER_DISCONN);
+            }
+            if (triggerLevelLow) {
+              startService(context,
+                           state.levelLow() ? POWER_LOW : POWER_OK);
+            }
+          }
+        });
   }
 
   public static void register(Context context) {

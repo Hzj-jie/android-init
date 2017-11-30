@@ -158,6 +158,24 @@ public final class Executor {
       builder.environment().put(
           "MODEL",
           Build.MODEL);
+      builder.environment().put(
+          "POWER_CONNECTED",
+          String.valueOf(Status.powerConnected()));
+      builder.environment().put(
+          "POWER_LEVEL",
+          String.valueOf(Status.powerLevel()));
+      builder.environment().put(
+          "POWER_LEVEL_LOW",
+          String.valueOf(Status.powerLevelLow()));
+      builder.environment().put(
+          "USB_CHARGING",
+          String.valueOf(Status.usbCharging()));
+      builder.environment().put(
+          "AC_CHARGING",
+          String.valueOf(Status.acCharging()));
+      builder.environment().put(
+          "WIRELESS_CHARGING",
+          String.valueOf(Status.wirelessCharging()));
       p = builder.start();
     }
     catch (Exception ex) {
