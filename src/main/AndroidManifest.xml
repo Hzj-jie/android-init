@@ -28,7 +28,8 @@
     <application android:icon="@drawable/blank">
         <receiver android:name=".Receiver"
             android:label="Receiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
 				<!--
 					These filters are dynamically registered in each listener.
