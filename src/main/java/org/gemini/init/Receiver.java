@@ -254,21 +254,6 @@ public class Receiver extends BroadcastReceiver {
     return true;
   }
 
-  public static void register(Context context) {
-    context = context.getApplicationContext();
-    instance.initialize(context);
-  }
-
-  public static void unregister(Context context) {
-    context = context.getApplicationContext();
-    try {
-      context.unregisterReceiver(instance);
-    }
-    catch (Exception ex) {}
-    instance.signalStrengthListener.stop();
-    instance.screenListener.stop();
-  }
-
   private static void startService(Context context, String action) {
     Intent intent = new Intent(action,
                                Uri.EMPTY,
@@ -295,8 +280,7 @@ public class Receiver extends BroadcastReceiver {
   }
 
   @Override
-  public void onReceive(Context context, Intent intent)
-  {
+  public void onReceive(Context context, Intent intent) {
     if (intent == null) return;
 
     if (instance != this) {

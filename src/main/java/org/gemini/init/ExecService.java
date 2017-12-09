@@ -74,7 +74,6 @@ public final class ExecService extends KeepAliveService {
   @Override
   public void onCreate() {
     super.onCreate();
-    Receiver.register(this);
     startService(new Intent(switches[defaultSwitch].action,
                             Uri.EMPTY,
                             this,
@@ -83,12 +82,6 @@ public final class ExecService extends KeepAliveService {
                             Uri.EMPTY,
                             this,
                             ExecService.class));
-  }
-
-  @Override
-  public void onDestroy() {
-    Receiver.unregister(this);
-    super.onDestroy();
   }
 
   private void exec(int switchId, final Bundle bundle) {
