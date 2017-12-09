@@ -131,6 +131,12 @@ public class Receiver extends BroadcastReceiver {
       "org.gemini.init.intent.POWER_LOW";
   public static final String POWER_OK =
       "org.gemini.init.intent.POWER_OK";
+  public static final String SCREEN_ON =
+      "org.gemini.init.intent.SCREEN_ON";
+  public static final String SCREEN_OFF =
+      "org.gemini.init.intent.SCREEN_OFF";
+  public static final String USER_PRESENT =
+      "org.gemini.init.intent.USER_PRESENT";
   private static final Receiver instance = new Receiver();
   private TelephonyState telephonyState;
   private PhonySignalStrengthListener signalStrengthListener;
@@ -139,8 +145,8 @@ public class Receiver extends BroadcastReceiver {
   private BootCompletedListener bootCompletedListener;
   private BatteryListener batteryListener;
 
-  synchronized private void initialize(final Context context) {
-    if (telephonyState != null) return;
+  synchronized private boolean initialize(final Context context) {
+    if (telephonyState != null) return false;
 
     Preconditions.isNull(telephonyState);
     telephonyState = new TelephonyState(context);
@@ -161,25 +167,28 @@ public class Receiver extends BroadcastReceiver {
         new Event.ParameterRunnable<Void>() {
           @Override
           public void run(Void nothing) {
-            Settable.setScreenIsOn(true);
-            startService(context, Intent.ACTION_SCREEN_ON);
+            if (Settable.setScreenIsOn(true)) {
+              startService(context, SCREEN_ON);
+            }
           }
         });
     screenListener.onScreenOff().add(
         new Event.ParameterRunnable<Void>() {
           @Override
           public void run(Void nothing) {
-            Settable.setScreenIsOn(false);
             Settable.setUserIsPresenting(false);
-            startService(context, Intent.ACTION_SCREEN_OFF);
+            if (Settable.setScreenIsOn(false)) {
+              startService(context, SCREEN_OFF);
+            }
           }
         });
     screenListener.onUserPresent().add(
         new Event.ParameterRunnable<Void>() {
           @Override
           public void run(Void nothing) {
-            Settable.setUserIsPresenting(true);
-            startService(context, Intent.ACTION_USER_PRESENT);
+            if (Settable.setUserIsPresenting(true)) {
+              startService(context, USER_PRESENT);
+            }
           }
         });
 
@@ -241,14 +250,13 @@ public class Receiver extends BroadcastReceiver {
             }
           }
         });
+
+    return true;
   }
 
   public static void register(Context context) {
     context = context.getApplicationContext();
     instance.initialize(context);
-
-    // Initialize Settable.
-    broadcastSignalStrength(context, PhonySignalStrengthListener.MIN_LEVEL - 1);
   }
 
   public static void unregister(Context context) {
@@ -296,7 +304,12 @@ public class Receiver extends BroadcastReceiver {
       return;
     }
 
-    initialize(context);
-    startService(context, intent.getAction());
+    if (initialize(context)) {
+      // Only manually start the service if it's the first request after service
+      // restarted; generally it will start INIT and LOOPER as the default
+      // switch and default looper switch. Otherwise, listeners should have
+      // handled the requests already.
+      startService(context, intent.getAction());
+    }
   }
 }

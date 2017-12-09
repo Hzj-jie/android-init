@@ -39,9 +39,9 @@ public final class ExecService extends KeepAliveService {
   private static final Switch[] switches = {
     new Switch(INIT, "init.sh"),
     new Switch(LOOPER, "looper.sh", true),
-    new Switch(Intent.ACTION_SCREEN_ON, "screen-on.sh"),
-    new Switch(Intent.ACTION_SCREEN_OFF, "screen-off.sh"),
-    new Switch(Intent.ACTION_USER_PRESENT, "screen-unlock.sh"),
+    new Switch(Receiver.SCREEN_ON, "screen-on.sh"),
+    new Switch(Receiver.SCREEN_OFF, "screen-off.sh"),
+    new Switch(Receiver.USER_PRESENT, "screen-unlock.sh"),
     new Switch(Receiver.WIFI_ON, "wifi-on.sh"),
     new Switch(Receiver.WIFI_OFF, "wifi-off.sh"),
     new Switch(Receiver.WIFI_CONN, "wifi-connected.sh"),
