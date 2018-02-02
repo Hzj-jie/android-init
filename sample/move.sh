@@ -25,6 +25,7 @@ do
     mv "$i/HDWallPaper/bigImage/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
     mv "$i/Pictures/OGQ/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
     mv "$i/Android/data/com.dv.adm/files/"* "$SDCARD/Download/" 1>/dev/null 2>&1
+    mv "$i/Download/email/"* "$SDCARD/Pictures/" 1>/dev/null 2>&1
 done
 
 if [ "$INTERNAL" != "$SDCARD" ]
