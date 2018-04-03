@@ -109,6 +109,24 @@ public class Receiver extends BroadcastReceiver {
       wirelessCharging = v;
       return true;
     }
+
+    public static boolean setNetworkClass(int v) {
+      if (networkClass == v) return false;
+      networkClass = v;
+      return true;
+    }
+
+    public static boolean setDataNetworkClass(int v) {
+      if (dataNetworkClass == v) return false;
+      dataNetworkClass = v;
+      return true;
+    }
+
+    public static boolean setVoiceNetworkClass(int v) {
+      if (voiceNetworkClass == v) return false;
+      voiceNetworkClass = v;
+      return true;
+    }
   }
 
   public static final String WIFI_ON = "org.gemini.init.intent.WIFI_ON";
@@ -266,6 +284,9 @@ public class Receiver extends BroadcastReceiver {
     Settable.setCarrier(instance.telephonyState.carrier());
     Settable.setPreferredNetworkType(
         instance.telephonyState.preferredNetworkType());
+    Settable.setNetworkClass(instance.telephonyState.networkClass());
+    Settable.setDataNetworkClass(instance.telephonyState.dataNetworkClass());
+    Settable.setVoiceNetworkClass(instance.telephonyState.voiceNetworkClass());
     if (level >= PhonySignalStrengthListener.MIN_LEVEL &&
         level <= PhonySignalStrengthListener.MAX_LEVEL) {
       if (Settable.setSignalStrength(level)) {

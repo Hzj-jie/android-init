@@ -176,6 +176,15 @@ public final class Executor {
       builder.environment().put(
           "WIRELESS_CHARGING",
           String.valueOf(Status.wirelessCharging()));
+      builder.environment().put(
+          "NETWORK_CLASS",
+          String.valueOf(Status.networkClass()));
+      builder.environment().put(
+          "DATA_NETWORK_CLASS",
+          String.valueOf(Status.dataNetworkClass()));
+      builder.environment().put(
+          "VOICE_NETWORK_CLASS",
+          String.valueOf(Status.voiceNetworkClass()));
       p = builder.start();
     }
     catch (Exception ex) {

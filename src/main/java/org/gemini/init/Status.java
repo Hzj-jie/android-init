@@ -69,6 +69,18 @@ public class Status {
     return wirelessCharging;
   }
 
+  public static int networkClass() {
+    return networkClass;
+  }
+
+  public static int dataNetworkClass() {
+    return dataNetworkClass;
+  }
+
+  public static int voiceNetworkClass() {
+    return voiceNetworkClass;
+  }
+
   protected static boolean wifiIsOn = false;
   protected static boolean wifiIsConnected = false;
   protected static int signalStrength = 0;
@@ -86,4 +98,7 @@ public class Status {
   protected static boolean usbCharging = false;
   protected static boolean acCharging = false;
   protected static boolean wirelessCharging = false;
+  protected static int networkClass = 0;
+  protected static int dataNetworkClass = 0;
+  protected static int voiceNetworkClass = 0;
 }
