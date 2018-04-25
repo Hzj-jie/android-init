@@ -22,6 +22,7 @@ do
         fi
     done
 
+    mv "$i/bluetooth/"* "$SDCARD/Pictures/WeChat/" 1>/dev/null 2>&1
     mv "$i/HDWallPaper/bigImage/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
     mv "$i/Pictures/OGQ/"* "$SDCARD/Pictures/background images/" 1>/dev/null 2>&1
     mv "$i/Android/data/com.dv.adm/files/"* "$SDCARD/Download/" 1>/dev/null 2>&1
