@@ -2,7 +2,7 @@
 
 echo in screen-off.sh
 
-if [ "$MODEL" != "PE-TL10"]
+if [ "$MODEL" == "PE-TL10"]
 then
   sh "./gps-off.sh" &
 fi
