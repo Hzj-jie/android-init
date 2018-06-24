@@ -90,23 +90,27 @@ public final class ExecService extends KeepAliveService {
     final String filename = switches[switchId].filename;
     final boolean repeat = switches[switchId].repeat;
     final ExecService me = this;
-    if (running.compareAndSet(0, 1)) {
-      Log.i(TAG, "Going to start " + filename + " for action " + action +
-                 " at " + Debugging.currentTime());
-      new Thread() {
-        @Override
-        public void run() {
-          int r = 0;
-          do {
-            r = Executor.exec(me, filename, parseBundle(bundle));
-          }
-          while (r > 0 && repeat);
-          if (!running.compareAndSet(1, 0)) assert false;
-          Log.i(TAG, "Finished " + filename + " for action " + action +
-                     " at " + Debugging.currentTime());
-        }
-      }.start();
+    if (!running.compareAndSet(0, 1)) {
+      Log.i(TAG, action + " has been started already, ignore the request at " +
+                 Debugging.currentTime());
+      return;
     }
+
+    Log.i(TAG, "Going to start " + filename + " for action " + action +
+               " at " + Debugging.currentTime());
+    new Thread() {
+      @Override
+      public void run() {
+        int r = 0;
+        do {
+          r = Executor.exec(me, filename, parseBundle(bundle));
+        }
+        while (r > 0 && repeat);
+        if (!running.compareAndSet(1, 0)) assert false;
+        Log.i(TAG, "Finished " + filename + " for action " + action +
+                   " at " + Debugging.currentTime());
+      }
+    }.start();
   }
 
   @Override
