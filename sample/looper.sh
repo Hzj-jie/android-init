@@ -16,11 +16,6 @@ then
   sh ./move.sh &
 fi
 
-if [ "$MODEL" = "VTR-L29" ]
-then
-  sleep 3600
-else
-  # 1200 is the maximum reliable seconds we can sleep, otherwise the delay may
-  # be too significant.
-  sleep 1200
-fi
+# 1200 is the maximum reliable seconds we can sleep, otherwise the delay may be
+# too significant.
+sleep 1200
