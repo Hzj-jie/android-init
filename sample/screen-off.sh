@@ -2,7 +2,7 @@
 
 echo in screen-off.sh
 
-if [ "$MODEL" == "PE-TL10"]
+if [ "$MODEL" == "PE-TL10" ]
 then
   sh "./gps-off.sh" &
 fi
@@ -15,5 +15,5 @@ then
   sh "./clear-assistant.sh" &
   sh "./signal-strengths.sh" &
 else
-  sh ./turn-on-off-wifi-based-on-network-state.sh &
+  sh "./turn-on-off-wifi-based-on-network-state.sh" &
 fi
