@@ -35,5 +35,6 @@ if [ "$INTERNAL" != "$SDCARD" ]
 then
     mv "$INTERNAL/Download/"* "$SDCARD/Download/" 1>/dev/null 2>&1
     mv "$INTERNAL/Pictures/Screenshots/"* "$SDCARD/Pictures/Screenshots/" 1>/dev/null 2>&1
+    mv "$INTERNAL/Sounds/"* "$SDCARD/Sounds/" 1>/dev/null 2>&1
 fi
 sh "./copy-new.sh" "$INTERNAL/MagazineUnlock/" "$SDCARD/Pictures/MagazineUnlock/" 1>/dev/null 2>&1
