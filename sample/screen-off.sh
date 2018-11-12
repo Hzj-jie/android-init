@@ -9,6 +9,7 @@ fi
 sh "./change-wallpaper.sh" &
 sh "./auto-ringer.sh" &
 # sh "./enable-2g.sh" &
+sh "./looper-impl.sh" &
 
 if [ "$MODEL" == "PE-TL10" ]
 then
