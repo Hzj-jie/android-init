@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+exit 0
+
 mkdir -p "$SDCARD/Pictures/WeChat"
 mkdir -p "$SDCARD/Pictures/background images"
 mkdir -p "$SDCARD/Pictures/MagazineUnlock"
