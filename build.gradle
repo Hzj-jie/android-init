@@ -11,6 +11,12 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
     }
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -44,4 +50,8 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:24.+'
 }

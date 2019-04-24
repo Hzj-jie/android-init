@@ -4,7 +4,7 @@
     android:versionCode="18"
     android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="9" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission xmlns:tools="http://schemas.android.com/tools"
@@ -77,11 +77,9 @@
             </intent-filter>
         </activity>
 
-        <!--
         <activity android:name=".GrantSDCardPermissionActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:label="Grant SD Card Permission"
-            android:noHistory="true"
             android:excludeFromRecents="true"
             android:enabled="true"
             android:exported="true">
@@ -91,6 +89,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        -->
     </application>
 </manifest>
