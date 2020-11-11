@@ -7,7 +7,7 @@ then
 fi
 
 sh ./silent-hours.sh
-if [ %? -eq 1 ]
+if [ $? -eq 1 ]
 then
   sh ./ringer-silent.sh
   exit 0
