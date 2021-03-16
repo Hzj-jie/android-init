@@ -1,5 +1,8 @@
-This application requires READ_PHONE_STATE and WRITE_SECURE_SETTING or other
-necessary permissions to execute its designed functionality, e.g. set the
-configurations which usually can only be set by "Settings" application of the
-system. The system states won't be used for any reason other than this. This
-application does not collect or send any user information for any purpose.
+This application requires ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE,
+INTERACT_ACROSS_USERS, READ_EXTERNAL_STORAGE, READ_PHONE_STATE,
+RECEIVE_BOOT_COMPLETED, WRITE_EXTERNAL_STORAGE and INTERNET permission to
+perform its designed functionality, execute user defined scripts on certain
+events, e.g., when phone screen connects to a certain WIFI, move certain files
+from one folder to another.
+
+This application does not collect or store or transfer any data for any purpose.
