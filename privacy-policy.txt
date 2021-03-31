@@ -1,0 +1,13 @@
+-- Privacy Policy of Event based script runner (org.gemini.init) --
+
+This application requires ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE,
+INTERACT_ACROSS_USERS, READ_EXTERNAL_STORAGE, READ_PHONE_STATE,
+RECEIVE_BOOT_COMPLETED, WRITE_EXTERNAL_STORAGE and INTERNET permission to
+perform its designed functionality, execute user defined scripts on certain
+events. For example,
+1. When phone connects to a certain WIFI, move certain files from one folder to
+another.
+2. When phone screen is turned off, execute another application to change
+background image.
+
+This application does not collect or store or transfer any data for any purpose.
