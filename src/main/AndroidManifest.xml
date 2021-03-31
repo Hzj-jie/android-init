@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gemini.init"
-    android:versionCode="18"
+    android:versionCode="19"
     android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="9" />
@@ -81,8 +81,8 @@
             android:theme="@android:style/Theme.NoDisplay"
             android:label="Grant SD Card Permission"
             android:excludeFromRecents="true"
-            android:enabled="true"
-            android:exported="true">
+            android:enabled="false"
+            android:exported="false">
             <intent-filter>
                 <action android:name=".GrantSDCardPermissionActivity" />
                 <action android:name="android.intent.action.MAIN" /> 

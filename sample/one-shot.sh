@@ -6,4 +6,4 @@ echo model $MODEL
 echo internal $INTERNAL
 echo sdcard $SDCARD
 
-sh ./move.sh
+sh ./change-wallpaper.sh
