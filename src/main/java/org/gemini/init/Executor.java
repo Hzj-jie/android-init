@@ -107,7 +107,7 @@ public final class Executor {
       return result;
     }
 
-    private void execSh() {
+    private int execSh() {
       Log.i(TAG, "Start Sh " + file);
       Process p = null;
       List<String> prog = new ArrayList<>();
@@ -146,6 +146,7 @@ public final class Executor {
       int r = waitFor(p);
       Log.i(TAG, "Command " + file + " finishes at " + Debugging.currentTime() +
                  " with exit code " + r);
+      return r;
     }
 
     private void execAmDelegate() {
@@ -154,7 +155,7 @@ public final class Executor {
       try (TsvReader reader = new TsvReader(file)) {
         String[] line = reader.readLine();
         while (line != null) {
-          if (line.length < 2) {
+          if (line.length < 3) {
             Notifier.notify(context, Notifier.Configuration
                 .New()
                 .withIcon(R.drawable.blank)
@@ -162,7 +163,12 @@ public final class Executor {
                           " do not contain enough parameters"));
             continue;
           }
-          for (int i = 0; i < line.length; i++) {
+          if (!line[0].isEmpty() && new Script(line[0]).exec() != 0) {
+            Log.i(TAG,
+                  "Filter " + line[0] + " returns !0 value, ignore " + line);
+            continue;
+          }
+          for (int i = 1; i < line.length; i++) {
             line[i] = Formatter.csvEnvs(envs, line[i]);
           }
           Intent intent = new Intent()
