@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public final class Executor {
             .New()
             .withIcon(R.drawable.blank)
             .withText("Failed to start process " + file + ": " + ex));
-        return;
+        return -1;
       }
 
       BufferedReader in = new BufferedReader(
@@ -153,8 +154,11 @@ public final class Executor {
       Log.i(TAG, "Start AmDelegate " + file);
       Map<String, String> envs = mergedEnvs();
       try (TsvReader reader = new TsvReader(file)) {
-        String[] line = reader.readLine();
-        while (line != null) {
+        while (true) {
+          String[] line = reader.readLine();
+          if (line == null) {
+            break;
+          }
           if (line.length < 3) {
             Notifier.notify(context, Notifier.Configuration
                 .New()
@@ -163,21 +167,29 @@ public final class Executor {
                           " do not contain enough parameters"));
             continue;
           }
-          if (!line[0].isEmpty() && new Script(line[0]).exec() != 0) {
-            Log.i(TAG,
-                  "Filter " + line[0] + " returns !0 value, ignore " + line);
-            continue;
+          if (!line[0].isEmpty()) {
+            String condition = Formatter.csvEnvs(envs, line[0]);
+            if (!new File(condition).isAbsolute()) {
+              condition = new File((new File(file)).getParentFile(),
+                                   condition).getPath();
+            }
+            if (new Script(condition).execSh() != 0) {
+              Log.i(TAG,
+                    "Filter " + condition + " returns !0 value, ignore " +
+                    Arrays.toString(line));
+              continue;
+            }
           }
           for (int i = 1; i < line.length; i++) {
             line[i] = Formatter.csvEnvs(envs, line[i]);
           }
           Intent intent = new Intent()
-              .setComponent(new ComponentName(line[0], line[1]))
+              .setComponent(new ComponentName(line[1], line[2]))
               .setAction(Intent.ACTION_MAIN)
               .addCategory(Intent.CATEGORY_LAUNCHER)
               .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          if (line.length > 2 && !line[2].isEmpty()) {
-            intent.setData(Uri.parse(line[2]));
+          if (line.length > 3 && !line[3].isEmpty()) {
+            intent.setData(Uri.parse(line[3]));
           }
           Log.i(TAG, "Start activity intent " + intent.toString());
           context.startActivity(intent);

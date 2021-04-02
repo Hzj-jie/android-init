@@ -1,3 +1,3 @@
 # TSV
 # apk-class	activity-class	data
-org.gemini.wallpaper_changer	org.gemini.wallpaper_changer.WallpaperChangerActivity	wallpaper-changer://org.gemini.wallpaper-changer.change/?folder=%s/MagazineUnlock,INTERNAL
+false.sh	org.gemini.wallpaper_changer	org.gemini.wallpaper_changer.WallpaperChangerActivity	wallpaper-changer://org.gemini.wallpaper-changer.change/?folder=%s/MagazineUnlock,INTERNAL
