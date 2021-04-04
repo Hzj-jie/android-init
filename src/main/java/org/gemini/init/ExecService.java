@@ -74,6 +74,7 @@ public final class ExecService extends KeepAliveService {
   @Override
   public void onCreate() {
     super.onCreate();
+    Receiver.instance.initialize(this);
     startService(new Intent(switches[defaultSwitch].action,
                             Uri.EMPTY,
                             this,

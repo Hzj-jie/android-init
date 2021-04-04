@@ -155,7 +155,7 @@ public class Receiver extends BroadcastReceiver {
       "org.gemini.init.intent.SCREEN_OFF";
   public static final String USER_PRESENT =
       "org.gemini.init.intent.USER_PRESENT";
-  private static final Receiver instance = new Receiver();
+  public static final Receiver instance = new Receiver();
   private TelephonyState telephonyState;
   private PhonySignalStrengthListener signalStrengthListener;
   private ScreenListener screenListener;
@@ -163,7 +163,7 @@ public class Receiver extends BroadcastReceiver {
   private BootCompletedListener bootCompletedListener;
   private BatteryListener batteryListener;
 
-  synchronized private boolean initialize(final Context context) {
+  public synchronized boolean initialize(final Context context) {
     if (telephonyState != null) return false;
 
     Preconditions.isNull(telephonyState);
