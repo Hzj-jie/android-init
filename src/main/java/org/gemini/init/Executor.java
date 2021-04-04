@@ -91,6 +91,7 @@ public final class Executor {
           "PREFERRED_NETWORK_TYPE",
           String.valueOf(Status.preferredNetworkType()));
       result.put("MODEL", Build.MODEL);
+      result.put("SDK_VERSION", String.valueOf(Build.VERSION.SDK_INT));
       result.put("POWER_CONNECTED", String.valueOf(Status.powerConnected()));
       result.put("POWER_LEVEL", String.valueOf(Status.powerLevel()));
       result.put("POWER_LEVEL_LOW", String.valueOf(Status.powerLevelLow()));
@@ -163,7 +164,7 @@ public final class Executor {
             Notifier.notify(context, Notifier.Configuration
                 .New()
                 .withIcon(R.drawable.blank)
-                .withText("AmDelegate line " + line +
+                .withText("AmDelegate line " + Arrays.toString(line) +
                           " do not contain enough parameters"));
             continue;
           }
@@ -193,7 +194,6 @@ public final class Executor {
           }
           Log.i(TAG, "Start activity intent " + intent.toString());
           context.startActivity(intent);
-          line = reader.readLine();
         }
       }
     }

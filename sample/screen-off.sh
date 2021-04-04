@@ -6,10 +6,14 @@ if [ "$MODEL" == "PE-TL10" ]
 then
   sh "./gps-off.sh" &
 fi
-sh "./change-wallpaper.sh" &
-sh "./auto-ringer.sh" &
-# sh "./enable-2g.sh" &
-sh "./looper-impl.sh" &
+# Android 11 does not allow to run am command from app anymore.
+if [ "$MODEL" != "Pixel 4a (5G)" ]
+then
+  sh "./change-wallpaper.sh" &
+  sh "./auto-ringer.sh" &
+  # sh "./enable-2g.sh" &
+  sh "./looper-impl.sh" &
+fi
 
 if [ "$MODEL" == "PE-TL10" ]
 then
