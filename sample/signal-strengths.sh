@@ -2,6 +2,10 @@
 
 echo in signal-strengths.sh
 
+if [ "$MODEL" != "Pixel 4a (5G)" ]
+  exit 0
+fi
+
 # if [ "$USER_PRESENT" == "true" ]
 # then
 #   if [ "$WIIF_ON" == "false" ] then
