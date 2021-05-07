@@ -2,6 +2,10 @@
 
 echo in screen-on.sh
 
+if [ "$MODEL" != "Pixel 4a (5G)" ]
+  exit 0
+fi
+
 if [ "$MODEL" == "PE-TL10" ]
 then
   sh ./set-assistant.sh

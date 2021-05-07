@@ -1,0 +1,6 @@
+# TSV
+# condition	apk-class	activity-class	data
+should-use-silent.sh	org.gemini.ringer_mode	org.gemini.ringer_mode.RingerSilentActivity
+should-use-vibrate.sh	org.gemini.ringer_mode	org.gemini.ringer_mode.RingerVibrateActivity
+should-use-normal.sh	org.gemini.ringer_mode	org.gemini.ringer_mode.RingerNormalActivity
+sleeplooper.sh	org.gemini.init	org.gemini.init.ActivateInitActivity

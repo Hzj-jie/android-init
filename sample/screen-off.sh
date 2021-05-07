@@ -2,6 +2,11 @@
 
 echo in screen-off.sh
 
+# Android 11 does not allow to run am command from app anymore.
+if [ "$MODEL" != "Pixel 4a (5G)" ]
+  exit 0
+fi
+
 if [ "$MODEL" == "PE-TL10" ]
 then
   sh "./gps-off.sh"

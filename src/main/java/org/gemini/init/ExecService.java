@@ -37,23 +37,23 @@ public final class ExecService extends KeepAliveService {
   }
 
   private static final Switch[] switches = {
-    new Switch(INIT, "init.sh"),
-    new Switch(LOOPER, "looper.sh", true),
-    new Switch(Receiver.SCREEN_ON, "screen-on.sh"),
-    new Switch(Receiver.SCREEN_OFF, "screen-off.sh"),
-    new Switch(Receiver.USER_PRESENT, "screen-unlock.sh"),
-    new Switch(Receiver.WIFI_ON, "wifi-on.sh"),
-    new Switch(Receiver.WIFI_OFF, "wifi-off.sh"),
-    new Switch(Receiver.WIFI_CONN, "wifi-connected.sh"),
-    new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected.sh"),
-    new Switch(Receiver.MOBILE_DATA_CONN, "mobile-data-connected.sh"),
-    new Switch(Receiver.MOBILE_DATA_DISCONN, "mobile-data-disconnected.sh"),
-    new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths.sh"),
-    new Switch(Receiver.POWER_CONN, "power-connected.sh"),
-    new Switch(Receiver.POWER_DISCONN, "power-disconnected.sh"),
-    new Switch(Receiver.POWER_LOW, "power-low.sh"),
-    new Switch(Receiver.POWER_OK, "power-ok.sh"),
-    new Switch(ONE_SHOT, "one-shot.sh"),
+    new Switch(INIT, "init"),
+    new Switch(LOOPER, "looper", true),
+    new Switch(Receiver.SCREEN_ON, "screen-on"),
+    new Switch(Receiver.SCREEN_OFF, "screen-off"),
+    new Switch(Receiver.USER_PRESENT, "screen-unlock"),
+    new Switch(Receiver.WIFI_ON, "wifi-on"),
+    new Switch(Receiver.WIFI_OFF, "wifi-off"),
+    new Switch(Receiver.WIFI_CONN, "wifi-connected"),
+    new Switch(Receiver.WIFI_DISCONN, "wifi-disconnected"),
+    new Switch(Receiver.MOBILE_DATA_CONN, "mobile-data-connected"),
+    new Switch(Receiver.MOBILE_DATA_DISCONN, "mobile-data-disconnected"),
+    new Switch(Receiver.SIGNAL_STRENGTHS, "signal-strengths"),
+    new Switch(Receiver.POWER_CONN, "power-connected"),
+    new Switch(Receiver.POWER_DISCONN, "power-disconnected"),
+    new Switch(Receiver.POWER_LOW, "power-low"),
+    new Switch(Receiver.POWER_OK, "power-ok"),
+    new Switch(ONE_SHOT, "one-shot"),
   };
 
   private static final Map<String, String> parseBundle(Bundle bundle) {
@@ -74,6 +74,7 @@ public final class ExecService extends KeepAliveService {
   @Override
   public void onCreate() {
     super.onCreate();
+    Receiver.instance.initialize(this);
     startService(new Intent(switches[defaultSwitch].action,
                             Uri.EMPTY,
                             this,

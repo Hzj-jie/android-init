@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
 import org.gemini.shared.BatteryListener;
 import org.gemini.shared.BootCompletedListener;
+import org.gemini.shared.Debugging;
 import org.gemini.shared.Event;
 import org.gemini.shared.NetworkListener;
 import org.gemini.shared.Objects;
@@ -15,6 +18,7 @@ import org.gemini.shared.ScreenListener;
 import org.gemini.shared.TelephonyState;
 
 public class Receiver extends BroadcastReceiver {
+  private static final String TAG = Debugging.createTag("Init.Receiver");
   private static class Settable extends Status {
     public static boolean setWifiIsOn(boolean v) {
       if (wifiIsOn == v) return false;
@@ -155,7 +159,7 @@ public class Receiver extends BroadcastReceiver {
       "org.gemini.init.intent.SCREEN_OFF";
   public static final String USER_PRESENT =
       "org.gemini.init.intent.USER_PRESENT";
-  private static final Receiver instance = new Receiver();
+  public static final Receiver instance = new Receiver();
   private TelephonyState telephonyState;
   private PhonySignalStrengthListener signalStrengthListener;
   private ScreenListener screenListener;
@@ -163,7 +167,7 @@ public class Receiver extends BroadcastReceiver {
   private BootCompletedListener bootCompletedListener;
   private BatteryListener batteryListener;
 
-  synchronized private boolean initialize(final Context context) {
+  public synchronized boolean initialize(final Context context) {
     if (telephonyState != null) return false;
 
     Preconditions.isNull(telephonyState);
@@ -302,6 +306,8 @@ public class Receiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
+    Log.i(TAG, "Received " + intent);
+
     if (intent == null) return;
 
     if (instance != this) {
@@ -310,6 +316,12 @@ public class Receiver extends BroadcastReceiver {
     }
 
     if (initialize(context)) {
+      if (Build.VERSION.SDK_INT >= 26) {
+        // Starting from API 26, a foreground service is required to avoid
+        // aggressive background execution limits.
+
+        // TODO
+      }
       // Only manually start the service if it's the first request after service
       // restarted; generally it will start INIT and LOOPER as the default
       // switch and default looper switch. Otherwise, listeners should have

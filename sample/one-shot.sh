@@ -5,5 +5,4 @@ echo in one-shot.sh
 echo model $MODEL
 echo internal $INTERNAL
 echo sdcard $SDCARD
-
-sh ./move.sh
+echo sdk_version $SDK_VERSION
